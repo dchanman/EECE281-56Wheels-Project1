@@ -1,0 +1,25 @@
+Please follow the following programming rules. If you don't, you're a jerk:
+
+Subroutines must be named with Capital Letters and underscores_between_words
+	ie) 	Alarm_Clock:
+		Display_Temperature_On_Hex:
+		Convert_To_BCD:
+Labels in subroutines must contain the subroutine's name
+	ie)	Alarm_Clock_Loop:
+		Display_Temperature_On_Hex_isNegative:
+		Convert_To_BCD_Done:
+
+Please include a commentbox specification above each subroutine
+It follows the format:
+	;
+	;Subroutine name
+	;What it does
+	;Inputs (if any, as in which registers/variables it uses as an "input")
+	;Outputs (if any, as in which registers/variables it "outputs")
+	;Modifies (the registers that are affected)
+	;
+
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;Display_Temperature_On_Hex;
+	;
+	;Displays the 
