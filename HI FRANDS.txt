@@ -1,5 +1,11 @@
 Please follow the following programming rules. If you don't, you're a jerk:
 
+||-----------|-----------------------------------------------------------------------------
+||SUBROUTINES|-----------------------------------------------------------------------------
+||-----------|-----------------------------------------------------------------------------
+
+
+
 Subroutines must be named with Capital Letters and underscores_between_words
 	ie) 	Alarm_Clock:
 		Display_Temperature_On_Hex:
@@ -8,6 +14,10 @@ Labels in subroutines must contain the subroutine's name
 	ie)	Alarm_Clock_Loop:
 		Display_Temperature_On_Hex_isNegative:
 		Convert_To_BCD_Done:
+
+||----------------|------------------------------------------------------------------------
+||COMMENTS IN CODE|------------------------------------------------------------------------
+||----------------|------------------------------------------------------------------------
 
 Please include a commentbox specification above each subroutine
 It follows the format:
@@ -19,7 +29,25 @@ It follows the format:
 	;Modifies (the registers that are affected)
 	;
 
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	;Display_Temperature_On_Hex;
-	;
-	;Displays the 
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;Display_Temperature_On_Hex						;;
+	;;									;;
+	;;Displays the temperature of the oven on the HEX displays;		;;
+	;;@input: x 		- the temperature value in binary		;;
+	;;@input: in_Celsius 	- the flag to display in Celsius or Fahrenheit	;;
+	;;@output: HEX0-3 	- displays for the temperature			;;
+	;;@modifies: R6, R7, A, C						;;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Please keep an up-to-date copy of all commentboxes in the SUBROUTINES text file.
+
+||------------|----------------------------------------------------------------------------
+||USING GITHUB|----------------------------------------------------------------------------
+||------------|----------------------------------------------------------------------------
+
+ALWAYS ALWAYS ALWAYS PULL BEFORE PUSHING
+ALWAYS PULL BEFORE DOING ANY WORK
+
+(if you don't we'll have merge issues and that means everyone cries)
+
+Commit regularly! 
