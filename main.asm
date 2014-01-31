@@ -2,6 +2,18 @@ $modde2
 
 org 0000H
    ljmp init
+   
+;Thermocouple Constants
+FREQ	EQU 33333333
+BAUD	EQU 115200
+T2LOAD	EQU 65536-(FREQ/(32*BAUD))
+;Serial Port Constants
+MISO	EQU  P0.0 
+MOSI	EQU  P0.1 
+SCLK	EQU  P0.2
+CE_ADC	EQU  P0.3
+CE_EE	EQU  P0.4
+CE_RTC	EQU  P0.5 
 
 DSEG at 30H
 
@@ -11,10 +23,16 @@ soak_time		 		: ds 2
 reflow_temperature		: ds 1
 reflow_time		 		: ds 2
 
+;Math16/32 Variables
+x						: ds 2
+y						: ds 2
+bcd						: ds 3
+op						: ds 1
+
 BSEG
 
-;Thermocouple Registers
-thermalcouple_temp		: db 2
+;Thermocouple Registers (mf from math16/32)
+mf 						: db 1
 
 CSEG
 
