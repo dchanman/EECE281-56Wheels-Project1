@@ -3,19 +3,12 @@ $NOLIST
 ;	Serial Port Interface
 ; 
 ;	Nina Dacanay and Glyn Han
+;
+;	Function: 1.)
 ;----------------------------------------------------
 CSEG
 
 Serial_Port_Init:
-	ret
-	
-Serial_Port_Write:
-	ret
-	
-Serial_Port_Write:
-	ret
-	
-Hellooooo I'm Testing AGAINNNNNNNNNNNNNNN	
-	
+	ret	
 	
 $LIST
