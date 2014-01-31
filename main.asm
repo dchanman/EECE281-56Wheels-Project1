@@ -11,6 +11,12 @@ soak_time		 :  ds 2
 reflow_temperature: ds 1
 reflow_time		 :  ds 2
 
+;LCD_Init Variables
+LCD_ON			 :  dbit 1
+LCD_EN			 :  dbit 1
+LCD_MOD			 :  dbit 1
+LCD_RW           :  dbit 1
+
 
 BSEG
 
@@ -22,6 +28,7 @@ $include(Controller_Output.asm)
 $include(Serial_Port.asm)
 $include(Thermocouple_Input.asm)
 $include(User_Interface.asm)
+$include(LCD_Display.asm)
 
 init:
 	clr A
