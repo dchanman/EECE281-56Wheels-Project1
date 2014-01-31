@@ -1,7 +1,7 @@
 $modde2
 
 org 0000H
-   ljmp init
+   ljmp main_init
    
 ;Thermocouple Constants
 FREQ	EQU 33333333
@@ -41,9 +41,14 @@ $include(Serial_Port.asm)
 $include(Thermocouple_Input.asm)
 $include(User_Interface.asm)
 $include(math16.asm)
-$include(math32.asm)
 
-init:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;init <STATE>									;;
+;;												;;
+;;Starting point for the program. Initializes	;;
+;;all of the components for the controller.		;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_init:
 	clr A
 	clr C
 	mov LEDG, A
@@ -55,5 +60,45 @@ init:
 	lcall Serial_Port_init
 	lcall Thermocouple_Input_init
 	lcall User_Interface_init
-main:
-	sjmp main
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_standby <STATE>									;;
+;;														;;
+;;Standby state for the controller. Checks for inputs,	;;
+;;allows the changing of parameters, and waits for the	;;
+;;ON switch to be toggled.								;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_standby:
+	;check all inputs and update parameters as needed
+	mov A, SWB
+	jnb ACC.5, main_standby_next0	;Set Reflow Time 
+		lcall Reflow_Time_Input
+		sjmp main_standby
+main_standby_next0:
+	jnb ACC.6, main_standby_next1	;Set Reflow Temp
+		lcall Reflow_Temperature_Input
+		sjmp main_standby
+main_standby_next1:
+	jnb ACC.7, main_standby_next2	;Set Soak Time
+		lcall Soak_Time_Input
+		sjmp main_standby
+main_standby_next2:
+	mov A, SWC
+	JB ACC.0,	main_standby_next3	;Set Soak Temp
+		lcall Soak_Temperature_Input
+		sjmp main_standby
+main_standby_next3:
+	JB ACC.1,	main_standby_next4	;Start Heating Process	
+		sjmp main_heatingProcess
+main_standby_next4:
+	sjmp main_standby
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_heatingProcess <STATE>			;;
+;;										;;
+;;Heating state for the controller. 	;;
+;;Goes through the procedure of baking	;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_heatingProcess:
+	sjmp main_standby
+	END
