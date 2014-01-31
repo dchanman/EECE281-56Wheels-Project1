@@ -9,4 +9,6 @@ CSEG
 Serial_Port_Init:
 	ret
 	
+Serial_Port_Write:
+	ret
 $LIST
