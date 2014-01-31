@@ -1,4 +1,4 @@
-$NOLIST
+
 ;----------------------------------------------------
 ;	Thermocouple/Serial Input Interface
 ; 
@@ -31,8 +31,32 @@ $NOLIST
 
 ;Thermocouple_Input_Init:
 	;ret	
+$Modde2
+org 0000H
+   ljmp Thermocouple_Program
+   
+FREQ   EQU 33333333
+BAUD   EQU 115200
+T2LOAD EQU 65536-(FREQ/(32*BAUD))
 
+MISO   EQU  P0.0 
+MOSI   EQU  P0.1 
+SCLK   EQU  P0.2
+CE_ADC EQU  P0.3
+CE_EE  EQU  P0.4
+CE_RTC EQU  P0.5 
 
+	DSEG at 30H
+x:      ds 2
+y:      ds 2
+bcd:	ds 3
+op:     ds 1
+
+	BSEG
+mf:     dbit 1
+
+	CSEG
+$include(math16.asm)
 
 ; Look-up table for 7-seg displays
 myLUT:
@@ -241,4 +265,4 @@ Thermocouple_Result:
 	
 END
 	
-$LIST
+

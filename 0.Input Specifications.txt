@@ -1,0 +1,28 @@
+Input	||	Function
+________________________________
+SW0-9	||	numerical input (User_Interface)
+10	||	
+11	||	
+12	||	
+13	||	Set Reflow Time
+14	||	Set Reflow Temperature
+15	||	Set Soak Time
+16	||	Set Soak Temperature
+17	||	Start/Stop the heating process
+KEY1	||	
+KEY2	||	
+KEY3	||	
+
+
+
+
+Bit Number	||	SWA	||	SWB	||	SWC
+_____________________________________________________________________
+	0	||	0	||	8	||	16
+	1	||	1	||	9	||	17
+	2	||	2	||	10	||	
+	3	||	3	||	11	||
+	4	||	4	||	12	||
+	5	||	5	||	13	||
+	6	||	6	||	14	||
+	7	||	7	||	15	||
