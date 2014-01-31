@@ -6,15 +6,15 @@ org 0000H
 DSEG at 30H
 
 ;User_Interface Variables
-soak_temperature :  ds 1
-soak_time		 :  ds 2
-reflow_temperature: ds 1
-reflow_time		 :  ds 2
-
+soak_temperature 		: ds 1
+soak_time		 		: ds 2
+reflow_temperature		: ds 1
+reflow_time		 		: ds 2
 
 BSEG
 
-
+;Thermocouple Registers
+thermalcouple_temp		: db 2
 
 CSEG
 
