@@ -22,6 +22,8 @@ $include(Controller_Output.asm)
 $include(Serial_Port.asm)
 $include(Thermocouple_Input.asm)
 $include(User_Interface.asm)
+$include(math16.asm)
+$include(math32.asm)
 
 init:
 	clr A
