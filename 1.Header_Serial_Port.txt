@@ -1,0 +1,43 @@
+;----------------------------------------------------
+;	Serial_Port Interface
+; 
+;	Kyujin Park
+;	
+;	Function:	1) 	Initializes the serial port
+;			2)	Transmits data through the serial port		   
+;
+;	Constants and Variables to be declared:
+;			Temperature_BCD:	ds 3
+;			//TODO: fill me in pls
+;
+;	Functions: 
+;			Serial_Port_init		-	initializes the serial port (TMODs, etc)
+;			Serial_Port_transmit		-	converts the current temperature and transmits it as a string
+;	  
+;----------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Serial_Port_transmit
+;
+;Takes the value stored in Temperature_Measured, converts it into BCD, then
+;sends the value as a String through the Serial Port.
+;
+;@requires	Temperature_Measured+0	Least significant byte of the temperature
+;		Temperature_Measured+1	Most significant byte of the temperature
+;@modifies	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+*of course you'll have some helper subroutines, but those don't need to be indicated here.
+*only include the specs here for subroutines that will be used by the main.asm file
+
+example helper subroutines:
+Serial_Port_sendChar		Sends a single character through the Serial Port
+
+Serial_Port_convertToBCD  	Takes the 2-byte value stored in Temperature_measured+0/+1 and 
+				converts it into BCD to be stored in Temperature_BCD
+
+Serial_Port_convertToString 	Takes the BCD value stored in Temperature_BCD and send its 
+				as a string digit by digit
