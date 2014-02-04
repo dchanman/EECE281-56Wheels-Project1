@@ -60,8 +60,8 @@ Thermocouple_Input_Delay_loop:
 ;Helper function to initialize SPI		;
 ;										;
 ;@requires:	SCLK	 	as P0.2			;
-;			MOSI		as P0.1			;
 ;			MISO		as P0.0			;
+;			MOSI		as P0.1			;
 ;			CE_ADC*		as P0.3			;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Thermocouple_Input_INIT_SPI:
