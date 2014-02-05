@@ -12,6 +12,10 @@ MOSI   EQU  P0.1
 SCLK   EQU  P0.2
 CE_ADC EQU  P0.3
 
+T2LOAD EQU 65536-(FREQ/(32*BAUD))
+FREQ   EQU 33333333
+BAUD   EQU 115200
+
 DSEG at 30H
 x:	ds 2
 y:	ds 2
@@ -24,6 +28,7 @@ mf:	dbit 1
 CSEG
 $include(Thermo2.asm)
 $include(math16.asm)
+$include(Serial_Port.asm)
 
 
 ;Delay half a second	
@@ -40,6 +45,11 @@ L1: djnz R0, L1
 BCD_LUT:
     DB 0C0H, 0F9H, 0A4H, 0B0H, 099H        ; 0 TO 4
     DB 092H, 082H, 0F8H, 080H, 090H        ; 4 TO 9
+
+; Look-up table for the Python Temperature Strip Chart   
+Serial_Port_My_Lut_ASCII:
+	DB 030H, 031H, 032H, 033H, 034H       ; 0 TO 4
+    DB 035H, 036H, 037H, 038H, 039H       ; 4 TO 9
     
 ; Display the value on HEX display
 Display:
@@ -84,6 +94,7 @@ Display:
     
 init:
 	lcall Thermocouple_Input_Init
+	lcall Serial_Port_Init
 	clr A
 	mov LEDRA, A
 	mov LEDRB, A
@@ -101,7 +112,7 @@ forever:
 	
 	lcall waithalfsec
 	lcall waithalfsec
-	
+	lcall Serial_Port_Send_String
 	sjmp forever
 	
 END
