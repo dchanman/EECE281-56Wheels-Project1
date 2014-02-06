@@ -99,6 +99,16 @@ Display_welcome_message:
 	mov a, #'e'
 	lcall LCD_put
 	mov a, #'n'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
 	
 	mov a, #c0H
 	;lcall LCD_command
