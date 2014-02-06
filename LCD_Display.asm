@@ -108,6 +108,7 @@ Display_welcome_message:
 	mov a, #' '
 	lcall LCD_put
 	mov a, #' '
+	lcall LCD_put
 	
 	;display the second row
 	mov a, #0c0H
@@ -145,15 +146,567 @@ Display_welcome_message:
 	mov a, #'O'
 	lcall LCD_put
 	mov a, #'n'
+	lcall LCD_put
 	ret
 Display_soak_temp_set:
-ret
+; Display the first row	
+	mov a, #80H
+	lcall LCD_command
+		
+	mov a, #'P'
+	lcall LCD_put
+    mov a, #'l'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+	
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'k'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	ret
+
 Display_soak_time_set:
-ret
+	; Display the first row	
+	mov a, #80H
+	lcall LCD_command
+		
+	mov a, #'P'
+	lcall LCD_put
+    mov a, #'l'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+	
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'k'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	ret
+
 Display_reflow_temp_set:
-ret
+; Display the first row	
+	mov a, #80H
+	lcall LCD_command
+		
+	mov a, #'P'
+	lcall LCD_put
+    mov a, #'l'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+	
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'w'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'P'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	ret
+
 Display_reflow_time_set:
-ret	
+	; Display the first row	
+	mov a, #80H
+	lcall LCD_command
+		
+	mov a, #'P'
+	lcall LCD_put
+    mov a, #'l'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+	
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'w'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	ret
 
 Confirmation_message:
+	; Display the first row	
+	mov a, #80H
+	lcall LCD_command
+		
+	mov a, #'C'
+	lcall LCD_put
+    mov a, #'o'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'g'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+	
+	lcall LCD_put
+	mov a, #'V'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'u'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'.'
+	lcall LCD_put
+	mov a, #'.'
+	lcall LCD_put
+	mov a, #'.'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+
+	lcall waitHalfSec
+	lcall waitHalfSec
+
+	; Display the first row	
+	mov a, #80H
+	lcall LCD_command
+		
+	mov a, #'S'
+	lcall LCD_put
+    mov a, #'o'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'k'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	;highest value
+	mov a, #''
+	lcall LCD_put
+	;higher value
+	mov a, #' '
+	lcall LCD_put
+	;lower value
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+	
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'k'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	;highest value
+	mov a, #' '
+	lcall LCD_put
+	;higher value
+	mov a, #' '
+	lcall LCD_put
+	;lower value
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+
+	; Display the first row	
+	mov a, #80H
+	lcall LCD_command
+		
+	mov a, #'R'
+	lcall LCD_put
+    mov a, #'e'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'w'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	;highest value
+	mov a, #' '
+	lcall LCD_put
+	;higher value
+	mov a, #' '
+	lcall LCD_put
+	;lower value
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+	
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'w'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	;highest value
+	mov a, #' '
+	;higher value
+	lcall LCD_put
+	;lower value
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall WaitHalfSec
+	lcall WaitHalfSec
 ret
+
+
