@@ -72,5 +72,88 @@ Clr_loop:
 	lcall Wait40us
 	djnz R1, Clr_loop
 	ret
+Display_welcome_message:
+; Display the first row	
+	mov a, #80H
+	lcall LCD_command
+		
+	mov a, #'R'
+	lcall LCD_put
+    mov a, #'e'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'w'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'O'
+	lcall LCD_put
+	mov a, #'v'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+	
+	lcall LCD_put
+	mov a, #'C'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'I'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'O'
+	lcall LCD_put
+	mov a, #'n'
+	ret
+Display_soak_temp_set:
+ret
+Display_soak_time_set:
+ret
+Display_reflow_temp_set:
+ret
+Display_reflow_time_set:
+ret	
 
-
+Confirmation_message:
+ret
