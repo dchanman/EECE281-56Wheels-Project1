@@ -9,6 +9,7 @@
 ;				into registers. 
 						1.1)Welcome_message
 						1.2)Soak_Temperature_Input
+						1.3)Soak_Time_Input
 						1.3)Reflow_Temperature_Input
 						1.4)Reflow_Time_Input
 ;

@@ -72,3 +72,5 @@ Clr_loop:
 	lcall Wait40us
 	djnz R1, Clr_loop
 	ret
+
+
