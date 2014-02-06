@@ -73,11 +73,10 @@ Clr_loop:
 	djnz R1, Clr_loop
 	ret
 Display_welcome_message:
-; Move to first column of first row	
+; Display the first row	
 	mov a, #80H
 	lcall LCD_command
 		
-	; Display letter A
 	mov a, #'R'
 	lcall LCD_put
     mov a, #'e'
@@ -110,8 +109,9 @@ Display_welcome_message:
 	lcall LCD_put
 	mov a, #' '
 	
-	mov a, #c0H
-	;lcall LCD_command
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
 	
 	lcall LCD_put
 	mov a, #'C'
