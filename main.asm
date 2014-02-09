@@ -79,6 +79,7 @@ $include(LCD_Display.asm)
 ;;	*On button pressed 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_standby:
+	;lcall UI_Update_values
 	ret
 
 

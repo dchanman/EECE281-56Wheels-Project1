@@ -42,13 +42,14 @@ $NOLIST
 CSEG
 
 User_Interface_Init:
-	lcall Settings_Initialization	
+	;lcall Settings_Initialization	
 ret
 	
 
 ;Function: Gets the correct parameters for over control from the user	
-Settings_Initializations:
-	lcall LCD_Init
+UI_Set_Up_Parameters:
+;Settings_Initializations:
+	;lcall LCD_Init
 
 	lcall Display_welcome_message
 
