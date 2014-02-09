@@ -107,8 +107,9 @@ forever:
 	setb b.0 ;check channel 1 for the thermocouple temperature first
 	lcall Thermocouple_Input_Read_ADC  
 	mov LEDRA, R7
-	mov LEDG, R6	
-	mov x, Temperature_Measured+0
+	mov LEDG, R6
+	clr mf	
+	mov x+0, Temperature_Measured+0
 	mov x+1, Temperature_Measured+1
 	
 	lcall Thermocouple_Input_Read_ADC
