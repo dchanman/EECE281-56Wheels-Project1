@@ -21,9 +21,12 @@ x:	ds 2
 y:	ds 2
 bcd:	ds 3
 Temperature_Measured:	ds 2
+Outside_Temperature_Measured: ds 2
 
 BSEG
-mf:	dbit 1
+mf:					dbit 1
+ChannelSelect:		dbit 1 
+
 
 CSEG
 $include(Thermo2.asm)
@@ -101,11 +104,17 @@ init:
 	mov LEDRC, A
 	mov LEDG, A
 forever:
-	lcall Thermocouple_Input_Read_ADC
+	setb b.0 ;check channel 1 for the thermocouple temperature first
+	lcall Thermocouple_Input_Read_ADC  
 	mov LEDRA, R7
 	mov LEDG, R6	
-	mov x, Temperature_Measured
+	mov x, Temperature_Measured+0
 	mov x+1, Temperature_Measured+1
+	
+	lcall Thermocouple_Input_Read_ADC
+	mov y+0, Outside_Temperature_Measured+0
+	mov y+1, Outside_Temperature_Measured+1
+	lcall add16
 	
 	lcall hex2bcd	
 	lcall Display
