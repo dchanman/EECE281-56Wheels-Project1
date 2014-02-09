@@ -1,3 +1,4 @@
+$NOLIST
 ;Function:  1)To initialize the LCD Display
 ;			2)To be able to write text to the LCD
 ;
@@ -708,25 +709,25 @@ ret
 Display_Status:
 	mov a, #80H
 	lcall LCD_command
-	 mov a, 'T'
+	 mov a, #'T'
 	 lcall LCD_put
-	 mov a, ':'
+	 mov a, #':'
 	 lcall LCD_put
-	 mov a, '';tempsignificant digit
+	 mov a, #'';tempsignificant digit
 	 lcall LCD_put
-	 mov a, '';tempmiddigit
+	 mov a, #'';tempmiddigit
 	 lcall LCD_put
-	 mov a, '';smalldigit
+	 mov a, #'';smalldigit
 	 lcall LCD_put
-	 mov a, 'C'
+	 mov a, #'C'
 	 lcall LCD_put
-	 mov a, ' '
+	 mov a, #' '
 	 lcall LCD_put
-	 mov a, 'T'
+	 mov a, #'T'
 	 lcall LCD_put
-	 mov a, 'i'
+	 mov a, #'i'
 	 lcall LCD_put
-	 mov a, ':'
+	 mov a, #':'
 	 lcall LCD_put
 	 ;code for writing time, need to decide on seconds or :
 
@@ -734,15 +735,15 @@ Display_Status:
 	mov a, #0c0H
 	lcall LCD_command
 
-	mov a, 'S'
+	mov a, #'S'
 	lcall LCD_put
-	mov a, 't'
+	mov a, #'t'
 	lcall LCD_put
-	mov a, 'a'
+	mov a, #'a'
 	lcall LCD_put
-	mov a, 't'
+	mov a, #'t'
 	lcall LCD_put
-	mov a, ':'
+	mov a, #':'
 	lcall LCD_put
 
 	;need to have logic to test which state we're in
