@@ -26,6 +26,7 @@ Outside_Temperature_Measured: ds 2
 BSEG
 mf:					dbit 1
 ChannelSelect:		dbit 1 
+Temperature_Measured_Sign: dbit 1
 
 
 CSEG
@@ -119,10 +120,15 @@ forever:
 	
 	lcall hex2bcd	
 	lcall Display
-	
+	jnb Temperature_Measured_Sign, Negative_Sign
+	mov HEX5, #0FFH
+Back:
 	lcall waithalfsec
 	lcall waithalfsec
 	lcall Serial_Port_Send_String
 	sjmp forever
 	
+Negative_Sign:
+	mov HEX5,#10111111B
+	ljmp Back
 END

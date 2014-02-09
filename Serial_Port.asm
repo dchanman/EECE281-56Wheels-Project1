@@ -79,12 +79,17 @@ Serial_Port_Putchar:
 Serial_Port_Send_String:
 	mov dptr, #Serial_Port_My_Lut_ASCII
 	
+	jb Serial_Port_Send_String_positive
+	mov A, #'-'
+	lcall Serial_Port_Putchar
+	
+Serial_Port_Send_String_positive:
 	; Display Digit 5
     mov A, bcd+2
     swap a
     anl a, #0fh
     movc A, @A+dptr
-    lcall Serial_Port_Putchar
+    lcall Serial_Port_Putchar  
     
     ; Display Digit 4
     mov A, bcd+2

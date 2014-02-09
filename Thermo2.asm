@@ -15,6 +15,7 @@ $NOLIST
 ;			SCLK	EQU P0.2
 ;			CE_ADC	EQU P0.3			
 ;			Temperature_Measured:	ds 2
+;			Temperature_Measured_Sign: db 1
 ;
 ;	Functions: 
 ;			Thermocouple_Input_Read_ADC
@@ -274,9 +275,21 @@ Thermocouple_Input_Binary_To_Outside_Temperature:
 ;@returns	Temperature_Measured - 2-byte temperature value
 ;				T_M+0 - Least significant byte
 ;				T_M+1 - Most significant byte
+;				Temperature_Measured_Sign: db 1
 ;@modifies	A, DPTR, PSW, x, x+1
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Thermocouple_Input_Convert_Binary_To_Outside_Temperature:
+
+	mov x+0, R3
+	mov x+1, R4	
+	mov y+1, #high(560)
+	mov y+0, #low(560)
+	lcall x_gt_y
+	
+	mov Temperature_Measured_Sign, mf
+
+
+
 	;dptr = LUT + (2 * binary value)
 	mov dptr, #Thermocouple_Input_Binary_To_Outside_Temperature
 	clr C
@@ -297,11 +310,12 @@ Thermocouple_Input_Convert_Binary_To_Outside_Temperature:
 	clr A
 	movc A, @A+dptr
 	mov Outside_Temperature_Measured+1, A	;high part is stored first
+							
 	inc dptr
 	clr A
 	movc A, @A+dptr
 	mov Outside_Temperature_Measured+0, A	;then low part
-	
+
 	ret
 
 $LIST
