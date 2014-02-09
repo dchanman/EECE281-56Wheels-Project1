@@ -14,6 +14,14 @@ SCLK	EQU  P0.2
 CE_ADC	EQU  P0.3
 CE_EE	EQU  P0.4
 CE_RTC	EQU  P0.5 
+;State Constants
+STATE_STANDBY 	EQU 0
+STATE_HEATING1	EQU 1
+STATE_SOAK		EQU 2
+STATE_HEATING2	EQU 3
+STATE_REFLOW	EQU 4
+STATE_COOLING	EQU 5
+STATE_OPEN_DOOR	EQU 6
 
 DSEG at 30H
 
@@ -23,43 +31,144 @@ soak_time		 		: ds 2
 reflow_temperature		: ds 1
 reflow_time		 		: ds 2
 
-<<<<<<< HEAD
-;LCD_Init Variables
-LCD_ON			 :  dbit 1
-LCD_EN			 :  dbit 1
-LCD_MOD			 :  dbit 1
-LCD_RW           :  dbit 1
+;Thermocouple Variables
+Temperature_Measured	: ds 2
 
-=======
 ;Math16/32 Variables
 x						: ds 2
 y						: ds 2
 bcd						: ds 3
 op						: ds 1
->>>>>>> c8b18c869d7b674820e16d78508aeeb66a90365e
+
+;State
+state					: ds 1
+elapsed_time			: ds 1
 
 BSEG
 
 ;Thermocouple Registers (mf from math16/32)
 mf 						: db 1
 
+
+;LCD_Init Variables
+LCD_ON			 		:  dbit 1
+LCD_EN			 		:  dbit 1
+LCD_MOD			 		:  dbit 1
+LCD_RW          		:  dbit 1
+
 CSEG
 
+$include(math16.asm)
 $include(Controller_Output.asm)
 $include(Serial_Port.asm)
 $include(Thermocouple_Input.asm)
 $include(User_Interface.asm)
-<<<<<<< HEAD
 $include(LCD_Display.asm)
-=======
-$include(math16.asm)
->>>>>>> c8b18c869d7b674820e16d78508aeeb66a90365e
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;init <STATE>									;;
-;;												;;
-;;Starting point for the program. Initializes	;;
-;;all of the components for the controller.		;;
+;;main_state_standby
+;;
+;;Function:
+;;	*Checks all inputs
+;;	*Turns all outputs off
+;;	*Displays message 	"Please specify parameters:				"
+;;						"Soak: (temp/time) | Reflow (temp/time)	"
+;;
+;;State Change:
+;;	STATE_HEATING1:
+;;	*On button pressed 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_state_standby:
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_state_heating1
+;;
+;;Function:
+;;	*Heats the oven to the soak temperature
+;;
+;;State Change:
+;;	STATE_SOAK:
+;;	*Temperature_Measured == soak_temperature
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_state_heating1:
+	ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_state_soak
+;;
+;;Function:
+;;	*Maintains oven temperature for the time specified
+;;		in soak_time
+;;
+;;State Change:
+;;	STATE_HEATING2:
+;;		*elapsed_time == soak_time 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_state_soak:
+	ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_state_heating2
+;;
+;;Function:
+;;	*Heats the oven to the reflow temperature
+;;
+;;State Change:
+;;	STATE_REFLOW:
+;;		*Temperature_Measured == reflow_temperature
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_state_heating2:
+	ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_state_reflow
+;;
+;;Function:
+;;	*Maintains oven temperature at reflow_temperature
+;;	for the time specified in reflow_time
+;;
+;;State Change:
+;;	STATE_COOLDOWN:
+;;		*elapsed_time == reflow_time
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_state_reflow:
+	ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_state_cooling
+;;
+;;Function:
+;;	*Waits for oven temperature to decrease to approx
+;;		0.5*reflow_temperature
+;;
+;;State Change:
+;;	STATE_OPEN_DOOR:
+;;		*temperature_measured == 0.5*reflow_temperature
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_state_cooling:
+	ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_state_open_door
+;;
+;;Function:
+;;	*Makes three beep sounds
+;;
+;;State Change:
+;;	STATE_STANDBY:
+;;		*door opens (if feature available)
+;;		*Or after the beeps are finished
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_state_open_door:
+	ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;init											
+;;												
+;;Starting point for the program. Initializes	
+;;all of the components for the controller.		
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_init:
 	clr A
@@ -68,50 +177,59 @@ main_init:
 	mov LEDRA, A
 	mov LEDRB, A
 	mov LEDRC, A
+	mov state, STATE_STANDBY	;initialize state
 	
 	lcall Controller_Output_init
 	lcall Serial_Port_init
 	lcall Thermocouple_Input_init
 	lcall User_Interface_init
+	lcall LCD_init
 	
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;main_standby <STATE>									;;
-;;														;;
-;;Standby state for the controller. Checks for inputs,	;;
-;;allows the changing of parameters, and waits for the	;;
-;;ON switch to be toggled.								;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-main_standby:
-	;check all inputs and update parameters as needed
-	mov A, SWB
-	jnb ACC.5, main_standby_next0	;Set Reflow Time 
-		lcall Reflow_Time_Input
-		sjmp main_standby
-main_standby_next0:
-	jnb ACC.6, main_standby_next1	;Set Reflow Temp
-		lcall Reflow_Temperature_Input
-		sjmp main_standby
-main_standby_next1:
-	jnb ACC.7, main_standby_next2	;Set Soak Time
-		lcall Soak_Time_Input
-		sjmp main_standby
-main_standby_next2:
-	mov A, SWC
-	JB ACC.0,	main_standby_next3	;Set Soak Temp
-		lcall Soak_Temperature_Input
-		sjmp main_standby
-main_standby_next3:
-	JB ACC.1,	main_standby_next4	;Start Heating Process	
-		sjmp main_heatingProcess
-main_standby_next4:
-	sjmp main_standby
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;main:
+;
+;State-based outputs are generated according to
+;the inputs received.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main:	
+	
+	mov A, state	
+	cjne A, STATE_STANDBY, main_checkEmergencyStop
+		lcall main_state_standby
+		
+	
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;main_heatingProcess <STATE>			;;
-;;										;;
-;;Heating state for the controller. 	;;
-;;Goes through the procedure of baking	;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-main_heatingProcess:
-	sjmp main_standby
+;check emergency stop button
+main_checkEmergencyStop:
+	;lcall check_emergency_stop
+		
+main_heating1:
+	cjne A, STATE_HEATING1, main_soak
+		lcall main_state_standby	
+		sjmp main
+main_soak:
+	cjne A, STATE_SOAK, main_heating2
+		lcall main_state_soak
+		sjmp main
+main_heating2:
+	cjne A, STATE_HEATING2, main_reflow
+		lcall main_state_heating2
+		sjmp main
+main_reflow:
+	cjne A, STATE_REFLOW, main_cooldown
+		lcall main_state_reflow
+		sjmp main
+main_cooldown:
+	cjne A, STATE_COOLDOWN, main_open_door
+		lcall main_state_cooldown
+		sjmp main
+main_open_door:
+	cjne A, STATE_OPEN_DOOR, main_error
+		lcall main_state_open_door
+		sjmp main
+
+;if for some reason, our state is an incorrect value, 
+;	reset the device for safety
+main_error:
+	ljmp main_init	
 	END
