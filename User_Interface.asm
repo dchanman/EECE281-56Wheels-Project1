@@ -72,7 +72,7 @@ Settings_Initialization_nonwelcome:
 	lcall Wait_for_Values
 	mov soak_time+0, bcd+0
 	mov soak_time+1, bcd+1
-	mov bcd+2, 0
+	mov bcd+2, #0
 	mov bcd+0, #0
 	mov bcd+1, #0 
 
@@ -80,7 +80,7 @@ Settings_Initialization_nonwelcome:
 	lcall Wait_for_Values
 	mov reflow_temp+0, bcd+0
 	mov reflow_temp+1, bcd+1
-	mov bcd+2, 0 
+	mov bcd+2, #0 
 	mov bcd+0, #0
 	mov bcd+1, #0
 
@@ -88,7 +88,7 @@ Settings_Initialization_nonwelcome:
 	lcall Wait_for_Values
 	mov reflow_temp+0, bcd+0
 	mov reflow_temp+1, bcd+1
-	mov bcd+2, 0 
+	mov bcd+2, #0 
 	mov bcd+0, #0
 	mov bcd+1, #0
 
@@ -104,21 +104,21 @@ Wait_for_Values_loop:
 	jnc Wait_for_Values_loop
 	lcall Shift_Digits
 	lcall Display
-	jnb KEY1, wait_key0
+	jnb KEY.1, wait_key0
 	ljmp Wait_for_Values_loop
 
 
 wait_key0:
-	jb Key1, Return_function
+	jb KEY.1, Return_function
 	jmp wait_key0
 
-Return_function
+Return_function:
 	ret
 
 
 Wait_for_Confirmation:
-	jnb KEY1, Return_function
-	jnb KEY2, Settings_Initialization_nonwelcome
+	jnb KEY.1, Return_function
+	jnb KEY.2, Settings_Initialization_nonwelcome
 	jmp Wait_for_confirmation
 
 $LIST
