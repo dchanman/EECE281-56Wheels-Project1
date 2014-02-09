@@ -566,7 +566,7 @@ Display_Confirmation_message:
 	mov a, #' '
 	lcall LCD_put
 	;highest value
-	mov a, #''
+	mov a, #' '
 	lcall LCD_put
 	;higher value
 	mov a, #' '
@@ -713,11 +713,11 @@ Display_Status:
 	 lcall LCD_put
 	 mov a, #':'
 	 lcall LCD_put
-	 mov a, #'';tempsignificant digit
+	 mov a, #' ';tempsignificant digit
 	 lcall LCD_put
-	 mov a, #'';tempmiddigit
+	 mov a, #' ';tempmiddigit
 	 lcall LCD_put
-	 mov a, #'';smalldigit
+	 mov a, #' ';smalldigit
 	 lcall LCD_put
 	 mov a, #'C'
 	 lcall LCD_put
