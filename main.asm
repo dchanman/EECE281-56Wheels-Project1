@@ -2,11 +2,12 @@ $modde2
 
 org 0000H
    ljmp main_init
-   
+      
 ;Thermocouple Constants
 FREQ	EQU 33333333
 BAUD	EQU 115200
 T2LOAD	EQU 65536-(FREQ/(32*BAUD))
+
 ;Serial Port Constants
 MISO	EQU  P0.0 
 MOSI	EQU  P0.1 
@@ -14,13 +15,14 @@ SCLK	EQU  P0.2
 CE_ADC	EQU  P0.3
 CE_EE	EQU  P0.4
 CE_RTC	EQU  P0.5 
+
 ;State Constants
 STATE_STANDBY 	EQU 0
 STATE_HEATING1	EQU 1
 STATE_SOAK		EQU 2
 STATE_HEATING2	EQU 3
 STATE_REFLOW	EQU 4
-STATE_COOLING	EQU 5
+STATE_COOLDOWN	EQU 5
 STATE_OPEN_DOOR	EQU 6
 
 DSEG at 30H
@@ -33,6 +35,7 @@ reflow_time		 		: ds 2
 
 ;Thermocouple Variables
 Temperature_Measured	: ds 2
+Outside_Temperature_Measured:	ds 2
 
 ;Math16/32 Variables
 x						: ds 2
@@ -45,25 +48,26 @@ state					: ds 1
 elapsed_time			: ds 1
 
 BSEG
+;LCD_Init Variables
+;;lcd_on			 		:  dbit 1
+;;LCD_EN			 		:  dbit 1
+;;LCD_MOD			 		:  dbit 1
+;;LCD_RW          		:  dbit 1
 
 ;Thermocouple Registers (mf from math16/32)
-mf 						: db 1
+mf 						:  dbit 1
 
-
-;LCD_Init Variables
-LCD_ON			 		:  dbit 1
-LCD_EN			 		:  dbit 1
-LCD_MOD			 		:  dbit 1
-LCD_RW          		:  dbit 1
 
 CSEG
 
 $include(math16.asm)
-$include(Controller_Output.asm)
+$include(SSR.asm)
 $include(Serial_Port.asm)
-$include(Thermocouple_Input.asm)
+;$include(Thermocouple_Input.asm)
+$include(Thermo2.asm)
 $include(User_Interface.asm)
 $include(LCD_Display.asm)
+;$include(Read_sw5.asm)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;main_state_standby
@@ -79,7 +83,7 @@ $include(LCD_Display.asm)
 ;;	*On button pressed 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_standby:
-	;lcall UI_Update_values
+
 	ret
 
 
@@ -94,6 +98,7 @@ main_state_standby:
 ;;	*Temperature_Measured == soak_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating1:
+	;lcall UI_Heating
 	ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -138,7 +143,7 @@ main_state_reflow:
 	ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;main_state_cooling
+;;main_state_cooldown
 ;;
 ;;Function:
 ;;	*Waits for oven temperature to decrease to approx
@@ -148,7 +153,7 @@ main_state_reflow:
 ;;	STATE_OPEN_DOOR:
 ;;		*temperature_measured == 0.5*reflow_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-main_state_cooling:
+main_state_cooldown:
 	ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -178,9 +183,9 @@ main_init:
 	mov LEDRA, A
 	mov LEDRB, A
 	mov LEDRC, A
-	mov state, STATE_STANDBY	;initialize state
+	mov state, #STATE_STANDBY	;initialize state
 	
-	lcall Controller_Output_init
+	lcall SSR_init
 	lcall Serial_Port_init
 	lcall Thermocouple_Input_init
 	lcall User_Interface_init
@@ -195,6 +200,7 @@ main_init:
 main:	
 	
 	mov A, state	
+	lcall UI_Update
 	cjne A, STATE_STANDBY, main_checkEmergencyStop
 		lcall main_state_standby
 		
