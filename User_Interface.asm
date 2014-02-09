@@ -46,16 +46,70 @@ User_Interface_Init:
 ret
 	
 
+;Function: Gets the correct parameters for over control from the user	
+Settings_Initializations:
+	lcall LCD_Init
 
-;Function: Gets the correct parameters for over control from the user
-Settings_Initialization:
-	lcall Welcome_message
-	lcall Soak_temperature_Input
-	lcall Soak_Time_Input
-	lcall Relow_Temperature_Input
-	lcall Reflow_Time_Input
+	lcall Display_welcome_message
+
+	lcall WaitHalfSec
+	lcall WaitHalfSec
+	lcall WaitHalfSec
+	lcall WaitHalfSec
+
+Settings_Initialization_nonwelcome:
+	lcall Display_soak_temp_set
+	lcall Wait_for_Values
+	mov soak_temp+0, bcd+0
+	mov soak_temp+1, bcd+1
+	mov bcd+2, 0
+
+	lcall Display_soak_time_set
+	lcall Wait_for_Values
+	mov soak_time+0, bcd+0
+	mov soak_time+1, bcd+1
+	mov bcd+2, 0 
+
+	lcall Display_reflow_temp_set
+	lcall Wait_for_Values
+	mov reflow_temp+0, bcd+0
+	mov reflow_temp+1, bcd+1
+	mov bcd+2, 0 
+
+	lcall Display_reflow_time_set
+	lcall Wait_for_Values
+	mov reflow_temp+0, bcd+0
+	mov reflow_temp+1, bcd+1
+	mov bcd+2, 0 
+
+	lcall Display_Confirmation_message 
+
 ret
 
+
+;Function: Waits for the user to enter a value, and leaves the loop if Switch17 is ;pressed
+Wait_for_Values:
+Wait_for_Values_loop: 
+	lcall ReadNumber
+	jnc Wait_for_Values_loop
+	lcall Shift_Digits
+	lcall Display
+	jnb KEY0, wait_key0
+	ljmp Wait_for_Values_loop
+
+
+wait_key0:
+	jb Key0, Return_function
+	jmp wait_key0
+
+Return_function
+	ret
+
+
+Wait_for_Confirmation:
+	jnb KEY0, Return_function
+	jnb KEY1, Settings_Initialization_nonwelcome
+	jmp Wait_for_confirmation
 
 ;Function: Displays the welcome message 
 ;			("Welcome! Please enter oven parameters")

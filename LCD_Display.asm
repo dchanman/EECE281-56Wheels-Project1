@@ -456,7 +456,7 @@ Display_reflow_time_set:
 	lcall LCD_put
 	ret
 
-Confirmation_message:
+Display_Confirmation_message:
 	; Display the first row	
 	mov a, #80H
 	lcall LCD_command
@@ -535,6 +535,8 @@ Confirmation_message:
 
 	lcall waitHalfSec
 	lcall waitHalfSec
+
+
 
 	; Display the first row	
 	mov a, #80H
@@ -617,10 +619,8 @@ Confirmation_message:
 	mov a, #' '
 	lcall LCD_put
 	
-	lcall waitHalfSec
-	lcall waitHalfSec
-	lcall waitHalfSec
-	lcall waitHalfSec
+
+	lcall Wait_for_Confirmation
 
 	; Display the first row	
 	mov a, #80H
@@ -703,10 +703,49 @@ Confirmation_message:
 	mov a, #' '
 	lcall LCD_put
 
-	lcall waitHalfSec
-	lcall waitHalfSec
-	lcall WaitHalfSec
-	lcall WaitHalfSec
+	lcall Wait_for_Confirmation
 ret
+Display_Status:
+	mov a, #80H
+	lcall LCD_command
+	 mov a, 'T'
+	 lcall LCD_put
+	 mov a, ':'
+	 lcall LCD_put
+	 mov a, '';tempsignificant digit
+	 lcall LCD_put
+	 mov a, '';tempmiddigit
+	 lcall LCD_put
+	 mov a, '';smalldigit
+	 lcall LCD_put
+	 mov a, 'C'
+	 lcall LCD_put
+	 mov a, ' '
+	 lcall LCD_put
+	 mov a, 'T'
+	 lcall LCD_put
+	 mov a, 'i'
+	 lcall LCD_put
+	 mov a, ':'
+	 lcall LCD_put
+	 ;code for writing time, need to decide on seconds or :
+
+	;display the second row
+	mov a, #0c0H
+	lcall LCD_command
+
+	mov a, 'S'
+	lcall LCD_put
+	mov a, 't'
+	lcall LCD_put
+	mov a, 'a'
+	lcall LCD_put
+	mov a, 't'
+	lcall LCD_put
+	mov a, ':'
+	lcall LCD_put
+
+	;need to have logic to test which state we're in
+
 
 
