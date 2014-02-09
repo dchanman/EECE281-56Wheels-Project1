@@ -8,10 +8,10 @@ $NOLIST
 ;				Called at the beginning of the code, this is the user interface
 ;				function used to get the temperature settings and stores them 
 ;				into registers. 
-						1.1)Welcome_message
-						1.2)Soak_Temperature_Input
-						1.3)Reflow_Temperature_Input
-						1.4)Reflow_Time_Input
+;						1.1)Welcome_message
+;						1.2)Soak_Temperature_Input
+;						1.3)Reflow_Temperature_Input
+;						1.4)Reflow_Time_Input
 ;
 ;  			  2)Checking for other inputs (Check_Inputs)
 ;				Provides a check to the other user inputs used during the heating
@@ -35,7 +35,7 @@ $NOLIST
 ;				2) Soak Time - soak_time
 ;				3) Reflow Temperature - reflow_temperature
 ;				4) Reflow Time        - relow_time
-;					note: time is given is seconds, and temperature is given in degrees C. both take two registers to store
+;					note: time is given is seconds, and temperature is given; indegrees C. both take two registers to store
 ;
 
 ;----------------------------------------------------
@@ -49,7 +49,7 @@ ret
 ;Function: Gets the correct parameters for over control from the user	
 UI_Set_Up_Parameters:
 ;Settings_Initializations:
-	;lcall LCD_Init
+	
 
 	lcall Display_welcome_message
 
@@ -63,25 +63,34 @@ Settings_Initialization_nonwelcome:
 	lcall Wait_for_Values
 	mov soak_temp+0, bcd+0
 	mov soak_temp+1, bcd+1
-	mov bcd+2, 0
+	mov bcd+2, #0
+	mov bcd+0, #0
+	mov bcd+1, #0
+
 
 	lcall Display_soak_time_set
 	lcall Wait_for_Values
 	mov soak_time+0, bcd+0
 	mov soak_time+1, bcd+1
-	mov bcd+2, 0 
+	mov bcd+2, 0
+	mov bcd+0, #0
+	mov bcd+1, #0 
 
 	lcall Display_reflow_temp_set
 	lcall Wait_for_Values
 	mov reflow_temp+0, bcd+0
 	mov reflow_temp+1, bcd+1
 	mov bcd+2, 0 
+	mov bcd+0, #0
+	mov bcd+1, #0
 
 	lcall Display_reflow_time_set
 	lcall Wait_for_Values
 	mov reflow_temp+0, bcd+0
 	mov reflow_temp+1, bcd+1
 	mov bcd+2, 0 
+	mov bcd+0, #0
+	mov bcd+1, #0
 
 	lcall Display_Confirmation_message 
 
@@ -95,12 +104,12 @@ Wait_for_Values_loop:
 	jnc Wait_for_Values_loop
 	lcall Shift_Digits
 	lcall Display
-	jnb KEY0, wait_key0
+	jnb KEY1, wait_key0
 	ljmp Wait_for_Values_loop
 
 
 wait_key0:
-	jb Key0, Return_function
+	jb Key1, Return_function
 	jmp wait_key0
 
 Return_function
@@ -108,30 +117,8 @@ Return_function
 
 
 Wait_for_Confirmation:
-	jnb KEY0, Return_function
-	jnb KEY1, Settings_Initialization_nonwelcome
+	jnb KEY1, Return_function
+	jnb KEY2, Settings_Initialization_nonwelcome
 	jmp Wait_for_confirmation
-
-;Function: Displays the welcome message 
-;			("Welcome! Please enter oven parameters")
-Welcome_message:
-ret
-
-;Function: Waits for user to input the soak temperature
-Soak_Temperature_Input:
-ret
-
-;Function: Waits for user to input the soak time
-Soak_Time_Input:
-ret
-
-;Function: Waits for user to input the reflow temperature
-Reflow_Temperature_Input:
-ret
-
-;Function: Waits for user to input the reflow time
-Reflow_Time_Input:
-ret
-
 
 $LIST
