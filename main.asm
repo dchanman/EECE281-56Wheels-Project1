@@ -28,9 +28,9 @@ STATE_OPEN_DOOR	EQU 6
 DSEG at 30H
 
 ;User_Interface Variables
-soak_temperature 		: ds 1
+soak_temperature 		: ds 2
 soak_time		 		: ds 2
-reflow_temperature		: ds 1
+reflow_temperature		: ds 2
 reflow_time		 		: ds 2
 
 ;Thermocouple Variables
