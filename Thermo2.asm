@@ -38,6 +38,28 @@ Thermocouple_Input_Init:
 	lcall Thermocouple_Input_INIT_SPI
 	ret
 	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Oven
+;
+;@returns Temperature_Measured
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Thermocouple_ReadCH0:
+	mov B, #0
+	lcall Thermocouple_Input_Read_ADC		
+	lcall Thermocouple_Input_Convert_Binary_To_Temperature
+	ret
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;	Outside
+;
+;@returns Temperature_Measured_Outside
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Thermocouple_ReadCH1:
+	mov B, #1
+	lcall Thermocouple_Input_Read_ADC
+	lcall Thermocouple_Input_Convert_Binary_To_Outside_Temperature
+	ret
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Thermocouple_Input_Read_ADC								
 ;															
@@ -58,9 +80,6 @@ Thermocouple_Input_Read_ADC:
 	mov R0, #00000001B ; Start bit:1
 	lcall Thermocouple_Input_Do_SPI
 	
-	cpl b.0
-	jnb b.0, Thermocouple_Input_Read_ADC_Outside_Temp
-	
 Thermocouple_Input_Read_ADC_Subroutine:	
 	mov a, b
 	swap a
@@ -79,48 +98,8 @@ Thermocouple_Input_Read_ADC_Subroutine:
 	mov R6, a
 	setb CE_ADC	
 	
-	lcall Thermocouple_Input_Convert_Binary_To_Temperature
-	
 	ret
 	
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;Thermocouple_Input_Read_ADC_Outside_Temp								
-;															
-;Reads the 10-bit value from the ADC and stores it in		
-;the registers. Automatically follows the reading with a 
-;conversion of the temperature to be stored 
-;
-;@returns	R4 - Most significant bits 	(XXXXXX98 binary)	
-;			R3 - Least significant bits	(76543210 binary)
-;			Temperature_Measured+0 - LSBs
-;			Temperature_Measured+1 - MSBs
-;@modifies	A, R0, R1, R3, R4, PSW								
-;			CE_ADC
-;			x, Temperature_Measured											
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
-Thermocouple_Input_Read_ADC_Outside_Temp:
-	mov a, b
-	swap a
-	anl a, #0F0H
-	setb acc.7 ; Single mode (bit 7).
-	
-	mov R0, a ;  Select channel
-	lcall Thermocouple_Input_Do_SPI
-	mov a, R1          ; R1 contains bits 8 and 9
-	anl a, #03H
-	mov R4, a	; R4 contains bits 8 to 9
-	
-	mov R0, #55H ; Send them trash. Ye boi.
-	lcall Thermocouple_Input_Do_SPI
-	mov a, R1    ; R1 contains bits 0 to 7
-	mov R3, a	 ; R3 contains bits 0 to 7
-	setb CE_ADC	
-	
-	lcall Thermocouple_Input_Convert_Binary_To_Outside_Temperature
-	
-	ljmp Thermocouple_Input_Read_ADC_Subroutine
-
-
 ;-----------------------------------------------------------------------------------------
 ;Helper subroutines - not used in the main program
 ;-----------------------------------------------------------------------------------------
@@ -249,7 +228,7 @@ Thermocouple_Input_Convert_Binary_To_Temperature:
 ;from the ADC into temperature values. Note that 2-bytes	
 ;are needed to store the values							
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-Thermocouple_Input_Binary_To_Outside_Temperature:
+Thermocouple_LM335_LUT:
 	DB 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 254, 253, 253, 253, 252, 251, 251, 251, 250, 249, 249, 249, 248, 247, 247, 247, 246, 245, 245, 245, 244, 243, 243, 243, 243, 242, 241, 241, 241, 240, 239, 239, 239, 238, 237, 237, 237, 236, 235, 235, 235, 234, 233, 233, 233, 232, 231, 231, 231, 230, 229, 229, 229, 228, 227, 227, 227, 226, 226
 	DB 225, 225, 224, 224, 223, 223, 222, 222, 221, 221, 220, 220, 219, 219, 218, 218, 217, 217, 216, 216, 215, 215, 214, 214, 213, 213, 212, 212, 211, 211, 211, 210, 210, 209, 209, 208, 208, 207, 207, 206, 206, 205, 205, 204, 204, 203, 203, 202, 202, 201, 201, 200, 200, 199, 199, 198, 198, 197, 197, 196, 196, 196, 195, 194, 194, 194, 193, 192, 192, 192, 191, 190, 190, 190, 189, 188, 188, 188, 187, 186, 186, 186, 185, 184, 184, 184, 183, 182, 182, 182, 181, 180, 180, 180, 180, 179, 178, 178, 178, 177
 	DB 176, 176, 176, 175, 174, 174, 174, 173, 172, 172, 172, 171, 170, 170, 170, 169, 168, 168, 168, 167, 166, 166, 166, 165, 164, 164, 164, 164, 162, 162, 162, 162, 160, 160, 160, 160, 158, 158, 158, 158, 156, 156, 156, 156, 154, 154, 154, 154, 152, 152, 152, 152, 150, 150, 150, 150, 148, 148, 148, 148, 148, 146, 146, 146, 146, 144, 144, 144, 144, 142, 142, 142, 142, 140, 140, 140, 140, 138, 138, 138, 138, 136, 136, 136, 136, 134, 134, 134, 134, 133, 132, 132, 132, 131, 130, 130, 130, 129, 128, 128
@@ -280,42 +259,28 @@ Thermocouple_Input_Binary_To_Outside_Temperature:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Thermocouple_Input_Convert_Binary_To_Outside_Temperature:
 
-	mov x+0, R3
-	mov x+1, R4	
+	mov x+0, R6
+	mov x+1, R7	
 	mov y+1, #high(560)
 	mov y+0, #low(560)
 	lcall x_gt_y
 	
 	mov Temperature_Measured_Sign, mf
 
-
-
 	;dptr = LUT + (2 * binary value)
-	mov dptr, #Thermocouple_Input_Binary_To_Outside_Temperature
+	mov dptr, #Thermocouple_LM335_LUT
 	clr C
 	mov A, dpl
-	add A, R3
+	add A, R6
 	mov dpl, A
 	mov A, dph
-	addc A, R4
-	mov dph, A
-	clr C
-	mov A, dpl
-	add A, R3
-	mov dpl, A
-	mov A, dph
-	addc A, R4
+	addc A, R7
 	mov dph, A
 	
 	clr A
 	movc A, @A+dptr
-	mov Outside_Temperature_Measured+1, A	;high part is stored first
-							
-	inc dptr
-	clr A
-	movc A, @A+dptr
-	mov Outside_Temperature_Measured+0, A	;then low part
-
+	mov Outside_Temperature_Measured+0, A
+			
 	ret
 
 $LIST
