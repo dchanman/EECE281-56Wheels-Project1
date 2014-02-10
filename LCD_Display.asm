@@ -115,7 +115,6 @@ Display_welcome_message:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'C'
 	lcall LCD_put
 	mov a, #'o'
@@ -191,7 +190,6 @@ Display_soak_temp_set:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'S'
 	lcall LCD_put
 	mov a, #'o'
@@ -268,7 +266,6 @@ Display_soak_time_set:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'S'
 	lcall LCD_put
 	mov a, #'o'
@@ -345,7 +342,6 @@ Display_reflow_temp_set:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'R'
 	lcall LCD_put
 	mov a, #'e'
@@ -422,7 +418,6 @@ Display_reflow_time_set:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'R'
 	lcall LCD_put
 	mov a, #'e'
@@ -484,7 +479,7 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-	mov a, #'r'
+	mov a, #' '
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
@@ -499,7 +494,6 @@ Display_Confirmation_message:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'V'
 	lcall LCD_put
 	mov a, #'a'
@@ -536,7 +530,8 @@ Display_Confirmation_message:
 
 	lcall waitHalfSec
 	lcall waitHalfSec
-
+	lcall WaitHalfSec
+	lcall WaitHalfSec
 
 
 	; Display the first row	
@@ -563,14 +558,28 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #':'
 	lcall LCD_put
-	mov a, #' '
+	
+	
+	mov bcd+0, soak_temperature+0
+	mov bcd+1, soak_temperature+1
+	mov bcd+2, soak_temperature+2
+	
+	mov a, bcd+1
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;highest value
-	mov a, #' '
+	
+	mov a, bcd+0
+	swap a
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;higher value
-	mov a, #' '
+
+	mov a, bcd+0
+	anl a, #0fH
+	orl a, #30h
 	lcall LCD_put
+	
 	;lower value
 	mov a, #' '
 	lcall LCD_put
@@ -583,7 +592,6 @@ Display_Confirmation_message:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'S'
 	lcall LCD_put
 	mov a, #'o'
@@ -604,15 +612,29 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #':'
 	lcall LCD_put
-	;highest value
-	mov a, #' '
+
+	
+	mov bcd+0, soak_time+0
+	mov bcd+1, soak_time+1
+	mov bcd+2, soak_time+2
+	
+	mov a, bcd+1
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;higher value
-	mov a, #' '
+	
+	mov a, bcd+0
+	swap a
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;lower value
-	mov a, #' '
+
+	mov a, bcd+0
+	anl a, #0fH
+	orl a, #30h
 	lcall LCD_put
+	
+
 	mov a, #' '
 	lcall LCD_put
 	mov a, #' '
@@ -651,15 +673,27 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #':'
 	lcall LCD_put
-	;highest value
-	mov a, #' '
+	
+	mov bcd+0, reflow_temperature+0
+	mov bcd+1, reflow_temperature+1
+	mov bcd+2, reflow_temperature+2
+	
+	mov a, bcd+1
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;higher value
-	mov a, #' '
+	
+	mov a, bcd+0
+	swap a
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;lower value
-	mov a, #' '
+
+	mov a, bcd+0
+	anl a, #0fH
+	orl a, #30h
 	lcall LCD_put
+
 	mov a, #' '
 	lcall LCD_put
 	
@@ -667,7 +701,6 @@ Display_Confirmation_message:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'R'
 	lcall LCD_put
 	mov a, #'e'
@@ -692,17 +725,31 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #':'
 	lcall LCD_put
-	;highest value
-	mov a, #' '
-	;higher value
+	
+	mov bcd+0, reflow_time+0
+	mov bcd+1, reflow_time+1
+	mov bcd+2, reflow_time+2
+	
+	mov a, bcd+1
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;lower value
+	
+	mov a, bcd+0
+	swap a
+	anl a, #0fH
+	orl a, #30H
+	lcall LCD_put
+
+	mov a, bcd+0
+	anl a, #0fH
+	orl a, #30h
+	lcall LCD_put
+	
 	mov a, #' '
 	lcall LCD_put
-	mov a, #' '
-	lcall LCD_put
-	mov a, #' '
-	lcall LCD_put
+	
+	lcall waitHalfSec
 
 	lcall Wait_for_Confirmation
 ret
@@ -747,6 +794,8 @@ Display_Status:
 	lcall LCD_put
 
 	;need to have logic to test which state we're in
-
 ret
+
+
+end
 
