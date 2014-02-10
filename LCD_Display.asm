@@ -711,21 +711,21 @@ Display_Status:
 	lcall LCD_command
 	 mov a, #'T'
 	 lcall LCD_put
-	 mov a, #':'
+	 mov a, #'c'
 	 lcall LCD_put
-	 mov a, #'';tempsignificant digit
+	 mov a, #':';tempsignificant digit
 	 lcall LCD_put
-	 mov a, #'';tempmiddigit
+	 mov a, #' ';tempmiddigit
 	 lcall LCD_put
-	 mov a, #'';smalldigit
+	 mov a, #' ';smalldigit
 	 lcall LCD_put
-	 mov a, #'C'
+	 mov a, #' '
 	 lcall LCD_put
 	 mov a, #' '
 	 lcall LCD_put
 	 mov a, #'T'
 	 lcall LCD_put
-	 mov a, #'i'
+	 mov a, #'t'
 	 lcall LCD_put
 	 mov a, #':'
 	 lcall LCD_put
@@ -746,7 +746,181 @@ Display_Status:
 	mov a, #':'
 	lcall LCD_put
 
-	;need to have logic to test which state we're in
+	mov a, state
+	cjne a, STATE_STANDBY, G1
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'d'
+	lcall LCD_put
+	mov a, #'b'
+	lcall LCD_put
+	mov a, #'y'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	 mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
 
-ret
+G1: mov a, state
+	cjne a, STATE_HEATING1, G2
+	mov a, #'H'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'g'
+	lcall LCD_put
+	mov a, #'1'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+
+G2: mov a, state
+	cjne a, STATE_SOAK, G3
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'k'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+
+G3: mov a, state
+	cjne a, STATE_HEATING2, G4
+	mov a, #'H'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'g'
+	lcall LCD_put
+	mov a, #'2'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+
+G4: mov a, state
+	cjne a, REFLOW, G5
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'w'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+
+G5: mov a, state
+	cjne a, STATE_COOLING, G6
+	mov a, #'C'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'g'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+
+G6: mov a, state
+	cjne a, STATE_OPEN_DOOR, G7
+	mov a, #'O'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'D'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+
+G7:
+	ret
 
