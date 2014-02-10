@@ -12,16 +12,12 @@ MOSI   EQU  P0.1
 SCLK   EQU  P0.2
 CE_ADC EQU  P0.3
 
-T2LOAD EQU 65536-(FREQ/(32*BAUD))
-FREQ   EQU 33333333
-BAUD   EQU 115200
-
 DSEG at 30H
 x:	ds 2
 y:	ds 2
 bcd:	ds 3
 Temperature_Measured:	ds 2
-Outside_Temperature_Measured: ds 2
+Outside_Temperature_Measured: ds 1
 
 BSEG
 mf:					dbit 1
@@ -32,8 +28,6 @@ Temperature_Measured_Sign: dbit 1
 CSEG
 $include(Thermo2.asm)
 $include(math16.asm)
-$include(Serial_Port.asm)
-
 
 ;Delay half a second	
 WaitHalfSec:
@@ -98,32 +92,23 @@ Display:
     
 init:
 	lcall Thermocouple_Input_Init
-	lcall Serial_Port_Init
 	clr A
 	mov LEDRA, A
 	mov LEDRB, A
 	mov LEDRC, A
 	mov LEDG, A
 forever:
-
-	lcall Thermocouple_ReadCH0	
-	lcall Thermocouple_ReadCH1
+	lcall Thermocouple_ReadCH0
+	mov LEDRA, R7
+	mov LEDG, R6
 	mov x+0, Temperature_Measured+0
-	mov x+1, Temperature_Measured+1	
-	mov y+0, Outside_Temperature_Measured+0
-	mov y+1, #0
-
-;	jnb Temperature_Measured_Sign, forever_sub
-		clr mf
-		lcall add16
-		sjmp forever_display
-			
-forever_display:
+	mov x+1, Temperature_Measured+1
 	lcall hex2bcd
 	lcall Display
-	lcall Serial_Port_Send_String
-	lcall waithalfsec
-	lcall waithalfsec
-	sjmp forever
 	
+	lcall waitHalfSec
+	lcall waitHalfSec
+	
+	
+	sjmp forever
 END
