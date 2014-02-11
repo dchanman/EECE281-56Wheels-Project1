@@ -40,6 +40,7 @@ soak_temperature 		: ds 2
 soak_time		 		: ds 2
 reflow_temperature		: ds 2
 reflow_time		 		: ds 2
+target_temperature		: ds 2
 
 ;Thermocouple Variables
 Temperature_Measured	: ds 2
@@ -122,7 +123,8 @@ main_Maintain_Temperature_tooCold:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_standby:
 	
-	
+	mov target_temperature, soak_temperature
+	mov target_temperature+1, soak_temperature+1
 	
 	ret
 
@@ -178,6 +180,8 @@ main_state_soak:
 	jb mf, main_state_soak_done
 	
 	mov state, #STATE_HEATING2
+	mov target_temperature, reflow_temperature
+	mov target_temperature+1, reflow_temperature+1
 	Buzzer_Beep_Multiple(4)
 	;lcall resetElapsedTime
 
