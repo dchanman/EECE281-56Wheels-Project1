@@ -172,11 +172,11 @@ option1:
 	;move values into the correct registers
 	mov soak_temperature+0, #00110000B
 	mov soak_temperature+1, #00000001B
-	mov soak_time+0, #01100000B
+	mov soak_time+0, #00000101B
 	mov soak_time+1, #00000000B
 	mov reflow_temperature+0, #00010000B
 	mov reflow_temperature+1, #00000010B
-	mov reflow_time+0, #00110000B
+	mov reflow_time+0, #00000101B
 	mov reflow_time+1, #00000000B
 	ljmp confirmation_message
 option2:

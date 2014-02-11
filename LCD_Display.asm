@@ -1107,10 +1107,10 @@ Display_Options:
 	mov a, #0H
 	orl a, #30H
 	lcall LCD_put
-	mov a, #6H
+	mov a, #0H
 	orl a, #30H
 	lcall LCD_put
-	mov a, #0H
+	mov a, #5H
 	orl a, #30H
 	lcall LCD_put
 	
@@ -1148,10 +1148,10 @@ Display_Options:
 	mov a, #0H
 	orl a, #30H
 	lcall LCD_put
-	mov a, #3H
+	mov a, #0H
 	orl a, #30H
 	lcall LCD_put
-	mov a, #0H
+	mov a, #5H
 	orl a, #30H
 	lcall LCD_put
 
