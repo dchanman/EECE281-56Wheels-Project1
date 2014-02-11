@@ -57,7 +57,8 @@ UI_Set_Up_Parameters:
 	lcall Display_preset_or_manual
 	lcall Wait_for_preset_or_manual
 	
-preset:lcall Display_options
+preset:
+	lcall Display_options
 	lcall turnoff_7seg
 	lcall Wait_for_preset_values
 	lcall turnoff_7seg
@@ -105,7 +106,7 @@ Confirmation_message:
 	lcall turnoff_7seg
 	lcall Display_Confirmation_message 
 	lcall convertbcd2hex
-	ljmp Dereksnextfunction
+	;ljmp Dereksnextfunction
 ret
 
 wait_for_preset_values:
