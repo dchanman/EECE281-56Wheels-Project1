@@ -55,12 +55,12 @@ UI_Set_Up_Parameters:
 	lcall WaitHalfSec
 	
 	lcall Display_preset_or_manual
-	lcall Wait_for_preset_or_manual
+	ljmp Wait_for_preset_or_manual
 	
 preset:
 	lcall Display_options
 	lcall turnoff_7seg
-	lcall Wait_for_preset_values
+	ljmp Wait_for_preset_values
 	lcall turnoff_7seg
 
 Settings_Initialization_nonwelcome:
@@ -106,8 +106,7 @@ Confirmation_message:
 	lcall turnoff_7seg
 	lcall Display_Confirmation_message 
 	lcall convertbcd2hex
-	;ljmp Dereksnextfunction
-ret
+	ret
 
 wait_for_preset_values:
 	jnb KEY.3, preset
