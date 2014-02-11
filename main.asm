@@ -122,6 +122,8 @@ main_Maintain_Temperature_tooCold:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_standby:
 	
+	
+	
 	ret
 
 
@@ -138,9 +140,9 @@ main_state_standby:
 main_state_heating1:
 	lcall SSR_Enable	
 	
-	lcall Thermocouple_Update	
-	mov x+0, Thermocouple_Update+0
-	mov x+1, Thermocouple_Update+1
+	lcall Thermocouple_Update
+	mov x+0, Temperature_Measured+0
+	mov x+1, Temperature_Measured+1
 	mov y+0, soak_temperature+0
 	mov y+1, soak_temperature+1
 	
@@ -196,8 +198,8 @@ main_state_heating2:
 	lcall SSR_Enable	
 	
 	lcall Thermocouple_Update	
-	mov x+0, Thermocouple_Update+0
-	mov x+1, Thermocouple_Update+1
+	mov x+0, Temperature_Measured+0
+	mov x+1, Temperature_Measured+1
 	mov y+0, reflow_temperature+0
 	mov y+1, reflow_temperature+1
 	
@@ -275,8 +277,8 @@ main_state_cooldown_done:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_open_door:
 	lcall Thermocouple_Update	
-	mov x+0, Thermocouple_Update+0
-	mov x+1, Thermocouple_Update+1
+	mov x+0, Temperature_Measured+0
+	mov x+1, Temperature_Measured+1
 	mov y+0, low(40)
 	mov y+1, high(40)
 	
