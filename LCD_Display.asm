@@ -115,7 +115,6 @@ Display_welcome_message:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'C'
 	lcall LCD_put
 	mov a, #'o'
@@ -191,7 +190,6 @@ Display_soak_temp_set:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'S'
 	lcall LCD_put
 	mov a, #'o'
@@ -268,7 +266,6 @@ Display_soak_time_set:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'S'
 	lcall LCD_put
 	mov a, #'o'
@@ -345,7 +342,6 @@ Display_reflow_temp_set:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'R'
 	lcall LCD_put
 	mov a, #'e'
@@ -366,7 +362,7 @@ Display_reflow_temp_set:
 	lcall LCD_put
 	mov a, #'m'
 	lcall LCD_put
-	mov a, #'P'
+	mov a, #'p'
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
@@ -422,7 +418,6 @@ Display_reflow_time_set:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'R'
 	lcall LCD_put
 	mov a, #'e'
@@ -484,7 +479,7 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-	mov a, #'r'
+	mov a, #' '
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
@@ -499,7 +494,6 @@ Display_Confirmation_message:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'V'
 	lcall LCD_put
 	mov a, #'a'
@@ -536,7 +530,8 @@ Display_Confirmation_message:
 
 	lcall waitHalfSec
 	lcall waitHalfSec
-
+	lcall WaitHalfSec
+	lcall WaitHalfSec
 
 
 	; Display the first row	
@@ -563,14 +558,28 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #':'
 	lcall LCD_put
-	mov a, #' '
+	
+	
+	mov bcd+0, soak_temperature+0
+	mov bcd+1, soak_temperature+1
+	mov bcd+2, soak_temperature+2
+	
+	mov a, bcd+1
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;highest value
-	mov a, #''
+	
+	mov a, bcd+0
+	swap a
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;higher value
-	mov a, #' '
+
+	mov a, bcd+0
+	anl a, #0fH
+	orl a, #30h
 	lcall LCD_put
+	
 	;lower value
 	mov a, #' '
 	lcall LCD_put
@@ -583,7 +592,6 @@ Display_Confirmation_message:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'S'
 	lcall LCD_put
 	mov a, #'o'
@@ -604,15 +612,29 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #':'
 	lcall LCD_put
-	;highest value
-	mov a, #' '
+
+	
+	mov bcd+0, soak_time+0
+	mov bcd+1, soak_time+1
+	mov bcd+2, soak_time+2
+	
+	mov a, bcd+1
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;higher value
-	mov a, #' '
+	
+	mov a, bcd+0
+	swap a
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;lower value
-	mov a, #' '
+
+	mov a, bcd+0
+	anl a, #0fH
+	orl a, #30h
 	lcall LCD_put
+	
+
 	mov a, #' '
 	lcall LCD_put
 	mov a, #' '
@@ -651,15 +673,27 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #':'
 	lcall LCD_put
-	;highest value
-	mov a, #' '
+	
+	mov bcd+0, reflow_temperature+0
+	mov bcd+1, reflow_temperature+1
+	mov bcd+2, reflow_temperature+2
+	
+	mov a, bcd+1
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;higher value
-	mov a, #' '
+	
+	mov a, bcd+0
+	swap a
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;lower value
-	mov a, #' '
+
+	mov a, bcd+0
+	anl a, #0fH
+	orl a, #30h
 	lcall LCD_put
+
 	mov a, #' '
 	lcall LCD_put
 	
@@ -667,7 +701,6 @@ Display_Confirmation_message:
 	mov a, #0c0H
 	lcall LCD_command
 	
-	lcall LCD_put
 	mov a, #'R'
 	lcall LCD_put
 	mov a, #'e'
@@ -692,40 +725,127 @@ Display_Confirmation_message:
 	lcall LCD_put
 	mov a, #':'
 	lcall LCD_put
-	;highest value
-	mov a, #' '
-	;higher value
+	
+	mov bcd+0, reflow_time+0
+	mov bcd+1, reflow_time+1
+	mov bcd+2, reflow_time+2
+	
+	mov a, bcd+1
+	anl a, #0fH
+	orl a, #30H
 	lcall LCD_put
-	;lower value
+	
+	mov a, bcd+0
+	swap a
+	anl a, #0fH
+	orl a, #30H
+	lcall LCD_put
+
+	mov a, bcd+0
+	anl a, #0fH
+	orl a, #30h
+	lcall LCD_put
+	
 	mov a, #' '
 	lcall LCD_put
-	mov a, #' '
-	lcall LCD_put
-	mov a, #' '
-	lcall LCD_put
+	
+	lcall waitHalfSec
 
 	lcall Wait_for_Confirmation
 ret
+
+Display_preset_or_manual:
+	mov a, #80h
+	lcall LCD_command
+	mov a, #'C'
+	lcall LCD_put
+	mov a, #'h'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'P'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #'I'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	mov a, #'u'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'B'
+	lcall LCD_put
+	mov a, #'y'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'H'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'d'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+ret
+	
 Display_Status:
 	mov a, #80H
 	lcall LCD_command
 	 mov a, #'T'
 	 lcall LCD_put
-	 mov a, #'c'
+	 mov a, #':'
 	 lcall LCD_put
-	 mov a, #':';tempsignificant digit
+	 mov a, #' ';tempsignificant digit
 	 lcall LCD_put
 	 mov a, #' ';tempmiddigit
 	 lcall LCD_put
 	 mov a, #' ';smalldigit
 	 lcall LCD_put
-	 mov a, #' '
+	 mov a, #'C'
 	 lcall LCD_put
 	 mov a, #' '
 	 lcall LCD_put
 	 mov a, #'T'
 	 lcall LCD_put
-	 mov a, #'t'
+	 mov a, #'i'
 	 lcall LCD_put
 	 mov a, #':'
 	 lcall LCD_put
@@ -746,6 +866,8 @@ Display_Status:
 	mov a, #':'
 	lcall LCD_put
 
+	
+	;need to have logic to test which state we're in
 	mov a, state
 	cjne a, STATE_STANDBY, G1
 	mov a, #'S'
@@ -770,7 +892,6 @@ Display_Status:
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-
 G1: mov a, state
 	cjne a, STATE_HEATING1, G2
 	mov a, #'H'
@@ -795,7 +916,6 @@ G1: mov a, state
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-
 G2: mov a, state
 	cjne a, STATE_SOAK, G3
 	mov a, #'S'
@@ -820,7 +940,6 @@ G2: mov a, state
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-
 G3: mov a, state
 	cjne a, STATE_HEATING2, G4
 	mov a, #'H'
@@ -845,7 +964,6 @@ G3: mov a, state
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-
 G4: mov a, state
 	cjne a, REFLOW, G5
 	mov a, #'R'
@@ -870,7 +988,6 @@ G4: mov a, state
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-
 G5: mov a, state
 	cjne a, STATE_COOLING, G6
 	mov a, #'C'
@@ -895,7 +1012,6 @@ G5: mov a, state
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-
 G6: mov a, state
 	cjne a, STATE_OPEN_DOOR, G7
 	mov a, #'O'
@@ -920,7 +1036,358 @@ G6: mov a, state
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
-
 G7:
 	ret
+
+Display_Options:
+	mov a, #80H
+	lcall LCD_command
+	mov a, #1H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #')'
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #01H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #03H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #00H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #6H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #02H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #01H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #00H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #3H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+
+	mov a, #80H
+	lcall LCD_command
+	mov a, #2H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #')'
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #01H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #05H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #00H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #9H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #02H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #02H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #00H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #4H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+
+	mov a, #80H
+	lcall LCD_command
+	mov a, #3H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #')'
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #01H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #07H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #00H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #1H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #2H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #02H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #03H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #00H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #0H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #4H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #5H
+	orl a, #30H
+	lcall LCD_put
+
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	lcall waithalfsec
+	
+	mov a, #80H
+	lcall LCD_command
+	mov a, #'P'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'c'
+	lcall LCD_put
+	mov a, #'h'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #'O'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	mov a, #'t'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #01H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #02H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #03H
+	orl a, #30H
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+
+end
 
