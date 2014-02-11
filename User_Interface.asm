@@ -43,8 +43,6 @@ CSEG
 	
 
 ;Function: Gets the correct parameters for over control from the user	
-bcd2hex:
-	ret
 
 UI_Set_Up_Parameters:
 ;Settings_Initializations:
@@ -108,8 +106,8 @@ Confirmation_message:
 	lcall Display_Confirmation_message 
 	lcall convertbcd2hex
 	ljmp Dereksnextfunction
-
 ret
+
 wait_for_preset_values:
 	jnb KEY.3, preset
 	jb SWA.1, option1
