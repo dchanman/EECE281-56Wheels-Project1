@@ -106,16 +106,19 @@ init:
 	mov LEDG, A
 forever:
 
-	lcall Thermocouple_ReadCH0	
-	lcall Thermocouple_ReadCH1
-	mov x+0, Temperature_Measured+0
-	mov x+1, Temperature_Measured+1	
-	mov y+0, Outside_Temperature_Measured+0
-	mov y+1, #0
+	;lcall Thermocouple_ReadCH0	
+	;lcall Thermocouple_ReadCH1
+	;mov x+0, Temperature_Measured+0
+	;mov x+1, Temperature_Measured+1	
+	;mov y+0, Outside_Temperature_Measured+0
+	;mov y+1, #0
 
-;	jnb Temperature_Measured_Sign, forever_sub
-		clr mf
-		lcall add16
+	lcall Thermocouple_Update
+	mov x+0, Temperature_Measured+0
+	mov x+1, Temperature_Measured+1
+	
+		;clr mf
+		;lcall add16
 		sjmp forever_display
 			
 forever_display:

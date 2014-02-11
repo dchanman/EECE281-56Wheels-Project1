@@ -38,6 +38,34 @@ Thermocouple_Input_Init:
 	lcall Thermocouple_Input_INIT_SPI
 	ret
 	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Thermocouple_Update
+;
+;Updates the temperature variables.
+;Reads from Thermocouple and LM335, adds the temperatures,
+;and stores the resulting temperature in Temperature_Measured
+;
+;@modifies	Temperature_Measured+0			-	"True" temperature 	LSBs
+;			Temperature_Measured+1			-						MSBs
+;			Outside_Temperature_Measured	-	LM335 variable
+;			R7, R6, R1, R0, ACC, PSW, CE_ADC
+;			x			
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Thermocouple_Update:
+	lcall Thermocouple_ReadCH0
+	lcall Thermocouple_ReadCH1
+	mov A, Temperature_Measured+0
+	add A, Outside_Temperature_Measured
+	mov Temperature_Measured+0, A
+	mov A, Temperature_Measured+1
+	addc A, #0
+	mov Temperature_Measured+1, A
+	ret
+	
+;-----------------------------------------------------------------------------------------
+;Helper subroutines - not used in the main program
+;-----------------------------------------------------------------------------------------
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Oven
 ;
@@ -99,10 +127,6 @@ Thermocouple_Input_Read_ADC_Subroutine:
 	setb CE_ADC	
 	
 	ret
-	
-;-----------------------------------------------------------------------------------------
-;Helper subroutines - not used in the main program
-;-----------------------------------------------------------------------------------------
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Thermocouple_Input_BinaryToTemperature						

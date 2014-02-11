@@ -1,0 +1,11 @@
+;----------------------------------------------------
+;	SSR 
+; 
+;	Derek Chan
+;	
+;	Function: Controls the SSR Relay box
+;	Constants and Variables to be declared: n/a
+;	Functions:	
+;				SSR_Enable 	- 	turns on the SSR
+;				SSR_Disable	-	turns off the SSR
+;----------------------------------------------------
