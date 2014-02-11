@@ -833,11 +833,23 @@ Display_Status:
 	 lcall LCD_put
 	 mov a, #':'
 	 lcall LCD_put
-	 mov a, #' ';tempsignificant digit
+	 ;displaying current temperature
+	 mov x+0, temperature_measured+0
+	 mov x+1, temperature_measured+1
+	 lcall hex2bcd
+	
+	 mov a, bcd+1
+	 anl a, #00001111B
+	 orl a, #30H
 	 lcall LCD_put
-	 mov a, #' ';tempmiddigit
+	 mov a, bcd+1
+	 swap a
+	 anl a, #00001111B
+	 orl a, #30H
 	 lcall LCD_put
-	 mov a, #' ';smalldigit
+	 mov a, bcd+0
+	 anl a, #00001111B
+	 orl a, #30H
 	 lcall LCD_put
 	 mov a, #'C'
 	 lcall LCD_put
@@ -845,12 +857,32 @@ Display_Status:
 	 lcall LCD_put
 	 mov a, #'T'
 	 lcall LCD_put
-	 mov a, #'i'
+	 mov a, #'t'
 	 lcall LCD_put
 	 mov a, #':'
 	 lcall LCD_put
-	 ;code for writing time, need to decide on seconds or :
-
+	 mov bcd+0, target_temperature+0
+	 mov bcd+1, target_temperature+1
+	 lcall hex2bcd
+	 mov a, bcd+1
+	 anl a, #00001111B
+	 orl a, #30H
+	 lcall LCD_put
+	 mov a, bcd+0
+	 swap a
+	 anl a, #00001111B
+	 orl a, #30H
+	 lcall LCD_put
+	 mov a, bcd+0
+	 anl a, #00001111B
+	 orl a, #30H
+	 lcall LCD_put
+	 mov a, #'C'
+	 lcall LCD_put
+	 mov a, #' '
+	 lcall LCD_put
+	 mov a, #' '
+	 lcall LCD_put
 	;display the second row
 	mov a, #0c0H
 	lcall LCD_command
