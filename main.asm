@@ -16,6 +16,9 @@ CE_ADC	EQU  P0.3
 CE_EE	EQU  P0.4
 CE_RTC	EQU  P0.5 
 
+;Buzzer Constants
+
+
 ;State Constants
 STATE_STANDBY 	EQU 0
 STATE_HEATING1	EQU 1

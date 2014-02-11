@@ -11,6 +11,7 @@ $NOLIST
 ;		Buzzer_ISR:		Makes the buzzer beep, *prioritized*
 ;		Buzzer_Start_Beep:	Starts the buzzer
 ;		Buzzer_Stop_Beep:	Stops the buzzer
+;		Buzzer_Beep_Multiple(int numBeeps):	Beeps the buzzer numBeeps times
 ;
 ;	Interrupt:
 ;		org 000BH
@@ -23,6 +24,7 @@ $NOLIST
 ;		BUZZER_T0_RELOAD EQU 65536-(BUZZER_CLK/(12*2*BUZZER_FREQ))
 ;	Variables:
 ;		Buzzer_Beep_Count	:	ds 1
+;		Buzzer_Beep_Num		:	ds 1
 ;
 ;		Buzzer_Beep_Active		:	dbit 1		
 ;		Buzzer_Continuous_Tone	:	dbit 1
@@ -67,6 +69,9 @@ Buzzer_ISR:
 
 	jnc Buzzer_ISR_Check_Beep
 	cpl Buzzer_Beep_Active
+	mov A, Buzzer_Beep_Num
+	inc A
+	mov Buzzer_Beep_Num, A
 
 Buzzer_ISR_Check_Beep:
 	jnb Buzzer_Beep_Active, Buzzer_ISR_end	
@@ -99,5 +104,37 @@ Buzzer_Start_Beep:
 Buzzer_Stop_Beep:
 	clr TR0
 	ret
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Buzzer_Beep_Multiple(int numBeeps)
+;;
+;;Macro function that beeps the buzzer 'numBeeps' times
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Buzzer_Beep_Multiple MAC
+	push ACC
+	mov A, R7
+	push ACC
+	mov R7, #(%0)
+	lcall Buzzer_Beep_Multiple_helper
+	pop ACC
+	mov R7, A
+	pop ACC
+ENDMAC
+
+Buzzer_Beep_Multiple_helper:
+	mov Buzzer_Beep_Num, #0
+	mov A, R7
+	rl A
+	mov R7, A
+	setb TR0
+Buzzer_Beep_Multiple_Loop:
+	mov A, Buzzer_Beep_Num
+	clr c
+	subb A, R7
+	jc Buzzer_Beep_Multiple_Loop	
+	clr TR0	
+	ret
+	
+
 	
 $LIST

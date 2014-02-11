@@ -22,6 +22,7 @@ org 000BH
 	
 DSEG at 30H
 Buzzer_Beep_Count	:	ds 1
+Buzzer_Beep_Num		:	ds 1
 
 BSEG
 Buzzer_Beep_Active		:	dbit 1
@@ -55,11 +56,32 @@ forever_checksw1:
 	jnb ACC.1, forever_longtone
 		mov LEDRA, #00000001B
 		setb Buzzer_Continuous_Tone
-		sjmp forever
+		sjmp forever_checkKey3
 		
 forever_longtone:
 		mov LEDRA, #00000000B
 		clr Buzzer_Continuous_Tone
-		sjmp forever
 		
+forever_checkKey3:
+	jb KEY.3, forever_checkKey2
+	mov LEDRC, #00000010B
+	Buzzer_Beep_Multiple(4)
+	mov LEDRC, #0
+	jnb KEY.3, $
+
+forever_checkKey2:
+	jb KEY.2, forever_checkKey1
+	mov LEDRC, #00000010B
+	Buzzer_Beep_Multiple(2)
+	mov LEDRC, #0
+	jnb KEY.2, $
+	
+forever_checkKey1:
+	jb KEY.1, forever
+	mov LEDRC, #00000010B
+	Buzzer_Beep_Multiple(8)
+	mov LEDRC, #0
+	jnb KEY.1, $
+
+	sjmp forever	
 END
