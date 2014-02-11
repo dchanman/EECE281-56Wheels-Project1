@@ -23,7 +23,7 @@ DSEG at 30H
 Timer_count10ms: 	ds 1
 Timer_Total_Time_Seconds: 	ds 1	;incrementing every second
 Timer_Total_Time_Minutes: 	ds 1	;incrementing every minute
-Timer_Elapsed_Time:			ds 1	;incrementing every second
+Timer_Elapsed_Time:			ds 2	;incrementing every second
 x				: ds 2
 bcd				: ds 3
 y				: ds 2
