@@ -45,13 +45,17 @@ ISR_Timer:
     mov A, Timer_Elapsed_Time+1
     addc a, #0
     mov Timer_Elapsed_Time+1, A
-    
-    mov a, Timer_Total_Time
+
+Timer_Seconds:    
+    mov a, Timer_Total_Time_Seconds
     add a, #1
-    mov Timer_Total_Time, a
-    mov a, Timer_Total_Time+1
-    addc a, #0
-    mov Timer_Total_Time+1, a    
+    cjne A, #60, ISR_Timer1_L0
+    mov Timer_Total_Time_Seconds, a 
+
+Timer_Minutes:   
+    mov a, Timer_Total_Time_Minutes
+    add a, #1
+    mov Timer_Total_Time_Minutes, a    
 
 ISR_Timer1_L0:	
 	; Restore used registers
