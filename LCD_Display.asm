@@ -965,7 +965,7 @@ G3: mov a, state
 	mov a, #' '
 	lcall LCD_put
 G4: mov a, state
-	cjne a, REFLOW, G5
+	cjne a, STATE_REFLOW, G5
 	mov a, #'R'
 	lcall LCD_put
 	mov a, #'e'
