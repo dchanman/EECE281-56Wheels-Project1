@@ -24,6 +24,11 @@ BUZZER_CLK EQU 33333333
 BUZZER_FREQ EQU 2000
 BUZZER_T0_RELOAD EQU 65536-(BUZZER_CLK/(12*2*BUZZER_FREQ))
 
+;Timer Constants
+Timer_XTAL           EQU 33333333
+Timer_FREQ           EQU 100
+TIMER1_RELOAD  EQU 65538-(Timer_XTAL/(12*100*Timer_FREQ))
+
 ;State Constants
 STATE_STANDBY 	EQU 0
 STATE_HEATING1	EQU 1
@@ -51,7 +56,10 @@ Buzzer_Beep_Count	:	ds 1
 Buzzer_Beep_Num		:	ds 1
 
 ;Timer
-elapsed_time			: ds 1
+Timer_count10ms: 	ds 1
+Timer_Total_Time_Seconds: 	ds 1	;incrementing every second
+Timer_Total_Time_Minutes: 	ds 1	;incrementing every minute
+Timer_Elapsed_Time:			ds 1	;incrementing every second
 
 ;Math16/32 Variables
 x						: ds 2
@@ -66,9 +74,15 @@ BSEG
 ;Math16
 mf 						:  dbit 1
 
+;Door
+Door_Open				:	dbit 1
+
 ;Buzzer bit variables
 Buzzer_Beep_Active		:	dbit 1		
 Buzzer_Continuous_Tone	:	dbit 1
+
+;Thermo2 Variables
+Temperature_Measured_Sign	:	dbit 1
 
 
 CSEG
@@ -80,13 +94,15 @@ $include(Buzzer.asm)
 $include(Thermo2.asm)
 $include(User_Interface.asm)
 $include(LCD_Display.asm)
-;$include(Read_sw5.asm)
+$include(Door.asm)
+$include(Timer.asm)
+$include(Read_sw5.asm)
 
-;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;main_Maintain_Temperature(var temp)
 ;;
 ;;Maintains the desired temperature given in var temp
-;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_Maintain_Temperature MAC
 	lcall Thermocouple_Update
 	mov x+0, Temperature_Measured+0
@@ -123,8 +139,9 @@ main_Maintain_Temperature_tooCold:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_standby:
 	
-	mov target_temperature, soak_temperature
-	mov target_temperature+1, soak_temperature+1
+	lcall UI_Set_Up_Parameters
+	mov state, #STATE_HEATING1
+	lcall Timer_Reset
 	
 	ret
 
@@ -140,7 +157,10 @@ main_state_standby:
 ;;	*Temperature_Measured == soak_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating1:
+	lcall Display_Status  ;this is UI_Update
+	lcall Timer_Display
 	lcall SSR_Enable	
+	
 	
 	lcall Thermocouple_Update
 	mov x+0, Temperature_Measured+0
@@ -152,7 +172,7 @@ main_state_heating1:
 	jb mf, main_state_heating1_done	
 	mov state, #STATE_SOAK
 	Buzzer_Beep_Multiple(4)
-	;lcall resetElapsedTime
+	lcall Timer_Reset_Elapsed_Time
 	
 main_state_heating1_done:	
 	ret
@@ -169,10 +189,12 @@ main_state_heating1_done:
 ;;		*elapsed_time == soak_time 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_soak:
+	lcall Display_Status  ;this is UI_Update
+	lcall Timer_Display
 	main_Maintain_Temperature(soak_temperature)
 	
-	mov x+0, elapsed_time+0
-	mov x+1, elapsed_time+1
+	mov x+0, Timer_elapsed_time+0
+	mov x+1, Timer_elapsed_time+1
 	mov y+0, soak_time+0
 	mov y+1, soak_time+1
 	
@@ -183,7 +205,7 @@ main_state_soak:
 	mov target_temperature, reflow_temperature
 	mov target_temperature+1, reflow_temperature+1
 	Buzzer_Beep_Multiple(4)
-	;lcall resetElapsedTime
+	lcall Timer_Reset_Elapsed_Time
 
 main_state_soak_done:
 	ret
@@ -199,6 +221,8 @@ main_state_soak_done:
 ;;		*Temperature_Measured == reflow_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating2:
+	lcall Display_Status  ;this is UI_Update
+	lcall Timer_Display
 	lcall SSR_Enable	
 	
 	lcall Thermocouple_Update	
@@ -211,7 +235,7 @@ main_state_heating2:
 	jb mf, main_state_heating2_done	
 	mov state, #STATE_REFLOW
 	Buzzer_Beep_Multiple(4)
-	;lcall resetElapsedTime
+	lcall Timer_Reset_Elapsed_Time
 	
 main_state_heating2_done:	
 	ret
@@ -228,10 +252,12 @@ main_state_heating2_done:
 ;;		*elapsed_time == reflow_time
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_reflow:
+	lcall Display_Status  ;this is UI_Update
+	lcall Timer_Display
 	main_Maintain_Temperature(reflow_temperature)
 	
-	mov x+0, elapsed_time+0
-	mov x+1, elapsed_time+1
+	mov x+0, Timer_elapsed_time+0
+	mov x+1, Timer_elapsed_time+1
 	mov y+0, reflow_time+0
 	mov y+1, reflow_time+1
 	
@@ -240,7 +266,7 @@ main_state_reflow:
 	
 	mov state, #STATE_COOLDOWN
 	Buzzer_Beep_Multiple(4)
-	;lcall resetElapsedTime
+	lcall Timer_Reset_Elapsed_Time
 
 main_state_reflow_done:
 	ret
@@ -256,15 +282,17 @@ main_state_reflow_done:
 ;;		*Door_Open == true
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_cooldown:
+	lcall Display_Status  ;this is UI_Update
+	lcall Timer_Display
 	lcall Thermocouple_Update
 	lcall SSR_Disable
 	lcall Buzzer_Start_Beep
 	
-	;lcall Door_Check
-	;jnb Door_Open, main_state_cooldown_done
+	lcall Door_Check
+	jnb Door_Open, main_state_cooldown_done
 	mov state, #STATE_OPEN_DOOR
 	lcall Buzzer_Stop_Beep
-	;lcall elapsed_time
+	lcall Timer_Reset
 	
 main_state_cooldown_done:	
 	ret
@@ -280,17 +308,20 @@ main_state_cooldown_done:
 ;;		*Temperature_Measured < 40 degrees C
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_open_door:
+	lcall Display_Status  ;this is UI_Update
+	lcall Timer_Display
 	lcall Thermocouple_Update	
 	mov x+0, Temperature_Measured+0
 	mov x+1, Temperature_Measured+1
-	mov y+0, low(40)
-	mov y+1, high(40)
+	mov y+0, #low(40)
+	mov y+1, #high(40)
 	
 	lcall x_gt_y
 	jb mf, main_state_open_door_done	
 	mov state, #STATE_STANDBY
 	Buzzer_Beep_Multiple(3)
-	;lcall resetElapsedTime
+	lcall Timer_Reset
+	lcall Timer_Clear
 	
 main_state_open_door_done:	
 	
@@ -314,7 +345,7 @@ main_init:
 	lcall SSR_init
 	lcall Serial_Port_init
 	lcall Thermocouple_Input_init
-	lcall User_Interface_init
+	;lcall User_Interface_init
 	lcall LCD_init
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -325,8 +356,9 @@ main_init:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main:	
 	
-	mov A, state	
-	lcall UI_Update
+	mov A, state
+	
+		
 	cjne A, STATE_STANDBY, main_checkEmergencyStop
 		lcall main_state_standby
 		
