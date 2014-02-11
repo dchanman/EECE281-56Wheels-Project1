@@ -45,8 +45,8 @@ My_Program:
 	mov LEDG,#0
 	mov HEX2, #0FFH
 	mov HEX3, #0FFH
-	mov Timer_Total_Time, #000H
-	mov Timer_Total_Time+1, #0H
+	mov Timer_Total_Time_Seconds, #000H
+	mov Timer_Total_Time_Minutes, #0H
 	mov Timer_Elapsed_Time, #000H
 	mov Timer_Elapsed_Time+1, #0H
 	

@@ -50,11 +50,14 @@ Timer_Seconds:
     mov a, Timer_Total_Time_Seconds
     add a, #1
     cjne A, #60, ISR_Timer1_L0
+    mov a, #0
     mov Timer_Total_Time_Seconds, a 
 
 Timer_Minutes:   
     mov a, Timer_Total_Time_Minutes
     add a, #1
+    cjne A, #60, ISR_Timer1_L0
+    mov a, #0
     mov Timer_Total_Time_Minutes, a    
 
 ISR_Timer1_L0:	
@@ -124,8 +127,8 @@ Timer_Display:
 	mov HEX3, a
 	
 ;TOTAL TIME	
-	mov x+0, Timer_Total_Time+0
-	mov x+1, Timer_Total_Time+1
+	mov x+0, Timer_Total_Time_Seconds
+	mov x+1, Timer_Total_Time_Minutes
 	lcall hex2bcd
 	
 	mov a, bcd+0
