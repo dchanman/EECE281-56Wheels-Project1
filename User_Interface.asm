@@ -40,10 +40,14 @@ $NOLIST
 
 ;----------------------------------------------------
 CSEG
+	
+
 ;Function: Gets the correct parameters for over control from the user	
+bcd2hex:
+	ret
+
 UI_Set_Up_Parameters:
 ;Settings_Initializations:
-	
 
 	lcall Display_welcome_message
 
@@ -51,6 +55,14 @@ UI_Set_Up_Parameters:
 	lcall WaitHalfSec
 	lcall WaitHalfSec
 	lcall WaitHalfSec
+	
+	lcall Display_preset_or_manual
+	lcall Wait_for_preset_or_manual
+	
+preset:lcall Display_options
+	lcall turnoff_7seg
+	lcall Wait_for_preset_values
+	lcall turnoff_7seg
 
 Settings_Initialization_nonwelcome:
 	lcall Display_soak_temp_set
@@ -91,21 +103,49 @@ Settings_Initialization_nonwelcome:
 	mov bcd+1, #0
 	lcall Display
 
+Confirmation_message:
+	lcall turnoff_7seg
 	lcall Display_Confirmation_message 
+	lcall convertbcd2hex
+	ljmp Dereksnextfunction
 
 ret
-;Function: Waits for the user to enter a value, and leaves the loop if Switch17 is ;pressed
+wait_for_preset_values:
+	jnb KEY.3, preset
+	jb SWA.1, option1
+	jb SWA.2, option2
+	jb SWA.3, option3
+	jmp wait_for_preset_values
+
+
+Wait_for_preset_or_manual:
+	jnb KEY.3, jump_Settings_initialization_nonwelcome ;key 3 is preset values
+	jnb KEY.2, wait_key2 ;key 2 is manual
+	jmp wait_for_preset_or_manual
+
+jump_settings_Initialization_nonwelcome:
+	jmp settings_initialization_nonwelcome
+	
+wait_key2:
+	jb KEY.2, jump_Preset
+	jmp wait_key2
+
+jump_preset:
+	ljmp preset
+
+
 Wait_for_Confirmation:
-	jnb KEY.2, Settings_Initialization_nonwelcome
+	jnb KEY.2, jump_Settings_Initialization_nonwelcome
 	jnb KEY.1, Return_function
 	jmp Wait_for_confirmation
 
-
+;Function: Waits for the user to enter a value, and leaves the loop if Switch17 is ;pressed
+	
 Wait_for_Values:
 ;Wait_for_Values_loop: 
 	lcall Display
 	lcall ReadNumber
-	jnb KEY.1, wait_key0
+	jnb KEY.1, wait_key1
 	jnc Wait_for_Values
 	lcall Shift_Digits
 	lcall Display
@@ -113,9 +153,9 @@ Wait_for_Values:
 	ljmp Wait_for_Values
 
 
-wait_key0:
+wait_key1:
 	jb KEY.1, Return_function
-	jmp wait_key0
+	jmp wait_key1
 
 Return_function:
 	ret
@@ -128,36 +168,71 @@ N1: djnz R0, N1 ; 3 machine cycles-> 3*30ns*250=22.5us
 	djnz R1, N2 ; 22.5us*250=5.625ms
 	djnz R2, N3 ; 5.625ms*90=0.5s (approximately)
 	ret
+
+
+option1:
+	;move values into the correct registers
+	mov soak_temperature+0, #00110000B
+	mov soak_temperature+1, #00000001B
+	mov soak_time+0, #01100000B
+	mov soak_time+1, #00000000B
+	mov reflow_temperature+0, #00010000B
+	mov reflow_temperature+1, #00000010B
+	mov reflow_time+0, #00110000B
+	mov reflow_time+1, #00000000B
+	ljmp confirmation_message
+option2:
+	mov soak_temperature+0, #01010000B
+	mov soak_temperature+1, #00000001B
+	mov soak_time+0, #10010000B
+	mov soak_time+1, #00000000B
+	mov reflow_temperature+0, #00100000B
+	mov reflow_temperature+1, #00000010B
+	mov reflow_time+0, #01000000B
+	mov reflow_time+1, #00000000B
+	ljmp confirmation_message
+option3:
+	mov soak_temperature+0, #01110000B
+	mov soak_temperature+1, #00000001B
+	mov soak_time+0, #00100000B
+	mov soak_time+1, #00000001B
+	mov reflow_temperature+0, #00110000B
+	mov reflow_temperature+1, #00000010B
+	mov reflow_time+0, #01000101B
+	mov reflow_time+1, #00000000B
+	ljmp confirmation_message
 	
-Display_R57:
-	mov dptr, #myLUT
-	; Display Digit 0
-    mov A, bcd+0
-    anl a, #0fh
-    movc A, @A+dptr
-    mov R5, A
-	; Display Digit 1
-    mov A, bcd+0
-    swap a
-    anl a, #0fh
-    movc A, @A+dptr
-    mov R6, A
-	; Display Digit 2
-    mov A, bcd+1
-    anl a, #0fh
-    movc A, @A+dptr
-    mov R7, A
-	; Display Digit 3
-    ;mov A, bcd+1
-    ;swap a
-    ;anl a, #0fh
-    ;movc A, @A+dptr
-    ;mov HEX3, A
-	; Display Digit 4
-    ;mov A, bcd+2
-    ;anl a, #0fh
-    ;movc A, @A+dptr
-    ;mov HEX4, A
-    ret
+convertbcd2hex:
+	mov bcd+0, soak_temperature+0
+	mov bcd+1, soak_temperature+1
+	lcall bcd2hex
+	mov soak_temperature+0, x+0
+	mov soak_temperature+1, x+1
 	
+	mov bcd+0, soak_time+0
+	mov bcd+1, soak_time+1
+	lcall bcd2hex
+	mov soak_time+0, x+0
+	mov soak_time+1, x+1
+	
+	mov bcd+0, reflow_temperature+0
+	mov bcd+1, reflow_temperature+1
+	lcall bcd2hex
+	mov reflow_temperature+0, x+0
+	mov reflow_temperature+1, x+1
+	
+	mov bcd+0, reflow_time+0
+	mov bcd+1, reflow_time+1
+	lcall bcd2hex
+	mov reflow_time+0, x+0
+	mov reflow_time+1, x+1
+ret
+
+turnoff_7seg:
+	mov HEX0, #11111111B
+	mov HEX1, #11111111B
+	mov HEX2, #11111111B
+	mov HEX3, #11111111B
+	mov HEX4, #11111111B
+ret
 end
