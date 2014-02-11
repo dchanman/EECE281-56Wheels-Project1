@@ -11,9 +11,10 @@
 ;;	TIMER1_RELOAD  			EQU 65538-(TIMER_XTAL/(12*TIMER_FREQ))
 ;;
 ;;Variables:
-;;	Timer_count10ms: 	ds 1
-;;	Timer_Total_Time: 	ds 2	;incrementing every second
-;;	Timer_Elapsed_Time:	ds 2	;incrementing every second
+;;	Timer_count10ms: 			ds 1
+;;	Timer_Total_Time_Seconds: 	ds 1	;incrementing every second
+;;	Timer_Total_Time_Minutes:	ds 1	;incrementing every minute
+;;	Timer_Elapsed_Time:			ds 2	;incrementing every second
 ;;
 ;;Interrupt Service Routine:
 ;;	org 0AB8H
