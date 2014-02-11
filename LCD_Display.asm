@@ -8,7 +8,6 @@ $NOLIST
 ;			1)
 ;
 
-
 Wait40us:
 	mov R0, #149
 Wait40us_L0: 
@@ -1021,7 +1020,7 @@ G4: mov a, state
 	mov a, #' '
 	lcall LCD_put
 G5: mov a, state
-	cjne a, STATE_COOLING, G6
+	cjne a, STATE_COOLDOWN, G6
 	mov a, #'C'
 	lcall LCD_put
 	mov a, #'o'
@@ -1030,13 +1029,13 @@ G5: mov a, state
 	lcall LCD_put
 	mov a, #'l'
 	lcall LCD_put
-	mov a, #'i'
+	mov a, #'d'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'w'
 	lcall LCD_put
 	mov a, #'n'
-	lcall LCD_put
-	mov a, #'g'
-	lcall LCD_put
-	mov a, #' '
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put

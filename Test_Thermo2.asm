@@ -50,11 +50,6 @@ BCD_LUT:
     DB 0C0H, 0F9H, 0A4H, 0B0H, 099H        ; 0 TO 4
     DB 092H, 082H, 0F8H, 080H, 090H        ; 4 TO 9
 
-; Look-up table for the Python Temperature Strip Chart   
-Serial_Port_My_Lut_ASCII:
-	DB 030H, 031H, 032H, 033H, 034H       ; 0 TO 4
-    DB 035H, 036H, 037H, 038H, 039H       ; 4 TO 9
-    
 ; Display the value on HEX display
 Display:
 	mov dptr, #BCD_LUT
