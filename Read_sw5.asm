@@ -1,18 +1,4 @@
-$modde2
-
-	CSEG at 0
-	ljmp mycode
-
-	DSEG at 30H
-bcd:	ds 3
-
-	CSEG
-
-; Look-up table for 7-seg displays
-myLUT:
-    DB 0C0H, 0F9H, 0A4H, 0B0H, 099H        ; 0 TO 4
-    DB 092H, 082H, 0F8H, 080H, 090H        ; 4 TO 9
-    DB 088H, 083H, 0C6H, 0A1H, 086H, 08EH  ; A to F
+$NOLIST
 
 Display:
 	mov dptr, #myLUT
@@ -33,16 +19,16 @@ Display:
     movc A, @A+dptr
     mov HEX2, A
 	; Display Digit 3
-    mov A, bcd+1
-    swap a
-    anl a, #0fh
-    movc A, @A+dptr
-    mov HEX3, A
+    ;mov A, bcd+1
+    ;swap a
+    ;anl a, #0fh
+    ;movc A, @A+dptr
+    ;mov HEX3, A
 	; Display Digit 4
-    mov A, bcd+2
-    anl a, #0fh
-    movc A, @A+dptr
-    mov HEX4, A
+    ;mov A, bcd+2
+    ;anl a, #0fh
+    ;movc A, @A+dptr
+    ;mov HEX4, A
     ret
 
 Shift_Digits:
@@ -122,23 +108,23 @@ ReadNumber_no_number:
 	clr c
 	ret
 	
-mycode:
-	mov SP, #7FH
-	clr a
-	mov LEDRA, a
-	mov LEDRB, a
-	mov LEDRC, a
-	mov LEDG, a
-	mov bcd+0, a
-	mov bcd+1, a
-	mov bcd+2, a
-	lcall Display
+;mycode:
+;	mov SP, #7FH
+;	clr a
+;	mov LEDRA, a
+;	mov LEDRB, a
+;	mov LEDRC, a
+;	mov LEDG, a
+;	mov bcd+0, a
+;	mov bcd+1, a
+;	mov bcd+2, a
+;	lcall Display
 
-forever:
-	lcall ReadNumber
-	jnc forever
-	lcall Shift_Digits
-	lcall Display
-	ljmp forever
+;forever:
+;	lcall ReadNumber
+;	jnc forever
+;	lcall Shift_Digits
+;	lcall Display
+;	ljmp forever
 	
 end
