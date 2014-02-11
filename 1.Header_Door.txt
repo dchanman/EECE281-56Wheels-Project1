@@ -1,0 +1,19 @@
+;----------------------------------------------------
+;	Door
+; 
+;	Derek Chan
+;	
+;	Function: Controls the SSR Relay box
+;	Pins:		P1.1 - Door input
+;	Constants and Variables to be declared: Door_Open:	1 if door is open, 0 if door is closed
+;	Functions:	
+;				SSR_Enable 	- 	turns on the SSR
+;				SSR_Disable	-	turns off the SSR
+;----------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Door_Check
+;;
+;;Updates Door_Open bit to indicate if the door 
+;;is open (1) or closed (0)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
