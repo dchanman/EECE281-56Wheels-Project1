@@ -8,23 +8,35 @@ $NOLIST
 ;				Called at the beginning of the code, this is the user interface
 ;				function used to get the temperature settings and stores them 
 ;				into registers. 
-;						1.1)Welcome_message
-;						1.2)Soak_Temperature_Input
-;						1.3)Reflow_Temperature_Input
-;						1.4)Reflow_Time_Input
-;
-;  			  2)Checking for other inputs (Check_Inputs)
-;				Provides a check to the other user inputs used during the heating
-;				process (ie force stop / oven open)
+;						1.1)Displays Welcome_message
+;						1.2)Displays Manual or Preset
+;							- checks to see if the user wants preset(KEY3)or manual (KEY2)
+;						1.3)Manual Setting
+;							1.3.1)Displays Enter_Soak_temp 			
+; 							1.3.2)Waits_for_Values 	
+;									-waits for the value from the switches
+;									 and waits for Key1 for continue		 
+;							1.3.3)Displays Enter_Soak_time
+;							1.3.4)Wait_for_Values
+;							1.3.5)Displays Enter_Reflow_temp
+;							1.3.6)Wait_for_values
+;							1.3.7)Displays Enter_Reflow_time
+;							1.3.8)Wait_for_Values
+;						1.4)Preset Setting
+;							1.4.1)Displays Display_options
+;							1.4.2)Wait_for_preset_values
+;									-waits for the values from 
+;									 switch 1-3 and KEY1 for continue
+;						1.5)Displays Confirmation_Message
 ;
 ;			  3)Status Display / Value Display (Display_board)
-;				Ability to write to the Hex Display / LCD Display and output set 
-;				messages onto the LCD Display 	
-;		
+;					function: Displays Current Temp / Target Temp to top line 	
+;							  Displays Status on bottom line
+;
 ;	Inputs: 	1) Switches 0-9 for inputing digits
-;				2) Switch 10 for Pressing Enter
-;				3) Switch 11 for Pressing Back
-;				4)Switch 12 for switching between Celcius/Kelvin/Farhenheit
+;				2) KEY1 for Pressing Continue
+;				3) KEY2 for manual
+;				4) KEY3 for preset
 ;
 ;	Outputs: 	1)HEX Display (writes the correct value to x+0 and x+1, and calls hex2bcd and display
 ;				2) LCD Display depending on status (Derek's portion) displays the
@@ -46,24 +58,30 @@ CSEG
 
 UI_Set_Up_Parameters:
 ;Settings_Initializations:
-
+	
+	;Displays that the reflow oven controller is on
 	lcall Display_welcome_message
-
+	
+	;waits 2 seconds
 	lcall WaitHalfSec
 	lcall WaitHalfSec
 	lcall WaitHalfSec
 	lcall WaitHalfSec
 	
 	lcall Display_preset_or_manual
+	;waits for the user to choose preset or manual
 	ljmp Wait_for_preset_or_manual
 	
 preset:
+	;Displays the options
 	lcall Display_options
 	lcall turnoff_7seg
+	;waits for the user to choose an option
 	ljmp Wait_for_preset_values
 	lcall turnoff_7seg
 
 Settings_Initialization_nonwelcome:
+	;Setting up Soak_temp
 	lcall Display_soak_temp_set
 	lcall Wait_for_Values
 	mov soak_temperature+0, bcd+0
@@ -73,7 +91,7 @@ Settings_Initialization_nonwelcome:
 	mov bcd+0, #0
 	mov bcd+1, #0
 
-
+	;Setting up Soak Time
 	lcall Display_soak_time_set
 	lcall Wait_for_Values
 	mov soak_time+0, bcd+0
@@ -83,6 +101,7 @@ Settings_Initialization_nonwelcome:
 	mov bcd+0, #0
 	mov bcd+1, #0 
 
+;	Setting Up Reflow Temp
 	lcall Display_reflow_temp_set
 	lcall Wait_for_Values
 	mov reflow_temperature+0, bcd+0
@@ -92,6 +111,7 @@ Settings_Initialization_nonwelcome:
 	mov bcd+0, #0
 	mov bcd+1, #0
 
+	;Setting Up Reflow Time
 	lcall Display_reflow_time_set
 	lcall Wait_for_Values
 	mov reflow_time+0, bcd+0
@@ -102,12 +122,16 @@ Settings_Initialization_nonwelcome:
 	mov bcd+1, #0
 	lcall Display
 
+;Displays the confirmation message
 Confirmation_message:
 	lcall turnoff_7seg
-	lcall Display_Confirmation_message 
+	lcall Display_Confirmation_message
+	;converts all values from BCD into hex for all 
+	;the stored parameters 
 	lcall convertbcd2hex
 	ret
 
+;Waits for the user to choose an option, or KEY3 for back
 wait_for_preset_values:
 	jnb KEY.3, preset
 	jb SWA.1, option1
@@ -116,20 +140,25 @@ wait_for_preset_values:
 	jmp wait_for_preset_values
 
 
+;Waits for the user to choose preset or manual
 Wait_for_preset_or_manual:
 	jnb KEY.3, jump_Settings_initialization_nonwelcome ;key 3 is preset values
 	jnb KEY.2, wait_key2 ;key 2 is manual
 	jmp wait_for_preset_or_manual
 
+;because jumps suck
 jump_settings_Initialization_nonwelcome:
-	jmp settings_initialization_nonwelcome
+	ljmp settings_initialization_nonwelcome
 	
+;wait for KEY.2 to be unpressed	
 wait_key2:
 	jb KEY.2, jump_Preset
 	jmp wait_key2
 
+;because jumps suck
 jump_preset:
 	ljmp preset
+
 
 
 Wait_for_Confirmation:
@@ -137,8 +166,7 @@ Wait_for_Confirmation:
 	jnb KEY.1, Return_function
 	jmp Wait_for_confirmation
 
-;Function: Waits for the user to enter a value, and leaves the loop if Switch17 is ;pressed
-	
+;Function: Waits for the user to enter a value, and leaves the loop if KEY1 is pressed	
 Wait_for_Values:
 ;Wait_for_Values_loop: 
 	lcall Display
@@ -151,10 +179,12 @@ Wait_for_Values:
 	ljmp Wait_for_Values
 
 
+;waits for KEY1 to be unpressed
 wait_key1:
 	jb KEY.1, Return_function
 	jmp wait_key1
 
+;because I suck at coding
 Return_function:
 	ret
 
@@ -168,6 +198,8 @@ N1: djnz R0, N1 ; 3 machine cycles-> 3*30ns*250=22.5us
 	ret
 
 
+;Writes the correct values to the parameters depending 
+;on what option was chosen
 option1:
 	;move values into the correct registers
 	mov soak_temperature+0, #00110000B
@@ -200,6 +232,7 @@ option3:
 	mov reflow_time+1, #00000000B
 	ljmp confirmation_message
 	
+;converts values from bcd2hex and stores it into the parameters	
 convertbcd2hex:
 	mov bcd+0, soak_temperature+0
 	mov bcd+1, soak_temperature+1
@@ -226,6 +259,7 @@ convertbcd2hex:
 	mov reflow_time+1, x+1
 ret
 
+;turning off all of the 7-seg displays
 turnoff_7seg:
 	mov HEX0, #11111111B
 	mov HEX1, #11111111B
