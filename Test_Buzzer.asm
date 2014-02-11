@@ -41,22 +41,25 @@ init:
 	
 forever:
 	mov A, SWA
+	
 	jnb ACC.0, forever_stopbeep
 		mov LEDG, #10000000B
 		lcall Buzzer_Start_Beep
 		sjmp forever_checksw1
+		
 forever_stopbeep:
 		mov LEDG, #00000000B
 		lcall Buzzer_Stop_Beep
 
 forever_checksw1:
-	jnb ACC.0, forever_longtone
+	jnb ACC.1, forever_longtone
 		mov LEDRA, #00000001B
-		clr Buzzer_Continuous_Tone
+		setb Buzzer_Continuous_Tone
 		sjmp forever
+		
 forever_longtone:
 		mov LEDRA, #00000000B
-		setb Buzzer_Continuous_Tone
+		clr Buzzer_Continuous_Tone
 		sjmp forever
 		
 END

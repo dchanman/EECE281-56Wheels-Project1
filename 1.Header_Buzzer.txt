@@ -7,7 +7,7 @@
 ;
 ;	Subroutines:
 ;		Buzzer_Init:	Initlizes P1MOD, TMOD, ***DOES NOT ENABLE INTERRUPTS***
-;		Buzzer_ISR:		Makes the buzzer beep
+;		Buzzer_ISR:		Makes the buzzer beep, *prioritized*
 ;		Buzzer_Start_Beep:	Starts the buzzer
 ;		Buzzer_Stop_Beep:	Stops the buzzer
 ;
@@ -26,3 +26,26 @@
 ;		Buzzer_Beep_Active		:	dbit 1		
 ;		Buzzer_Continuous_Tone	:	dbit 1
 ;----------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Buzzer_ISR
+;;
+;;Interrupt service routine for the buzzer. Causes
+;;the buzzer to beep according to set parameters.
+;;
+;;@param	-	Buzzer_Continuous_Tone:	
+;;					Buzzer goes BEEEEEEEEEEEP if set to 1,
+;;					Buzzer goes beep-beep-beep... if set to 0
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Buzzer_Start_Beep
+;;
+;;Starts the buzzer
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Buzzer_Stop_Beep
+;;
+;;Stops the buzzer
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

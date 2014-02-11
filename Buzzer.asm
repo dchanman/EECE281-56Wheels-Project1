@@ -8,7 +8,7 @@ $NOLIST
 ;
 ;	Subroutines:
 ;		Buzzer_Init:	Initlizes P1MOD, TMOD, ***DOES NOT ENABLE INTERRUPTS***
-;		Buzzer_ISR:		Makes the buzzer beep
+;		Buzzer_ISR:		Makes the buzzer beep, *prioritized*
 ;		Buzzer_Start_Beep:	Starts the buzzer
 ;		Buzzer_Stop_Beep:	Stops the buzzer
 ;
@@ -37,13 +37,11 @@ Buzzer_Init:
 	mov TH0, #high(BUZZER_T0_RELOAD)
 	mov TL0, #low(BUZZER_T0_RELOAD)
 	setb ET0				; Enable T0 interrupt
-	
-	;;;;;;;;
-	;TODO: PRIORITIZE T0 OVER OTHER INTERRUPTS
-	;;;;;;;;
+	setb PT0				; Set T0 priority
 	
 	setb Buzzer_Beep_Active
 	clr Buzzer_Continuous_Tone
+	mov Buzzer_Beep_Count, #0
 	
 	ret
 	
@@ -61,7 +59,7 @@ Buzzer_ISR:
 	push acc
 	push psw
 	jb Buzzer_Continuous_Tone, Buzzer_ISR_Make_Beep
-	
+
 	clr C
 	mov A, Buzzer_Beep_Count
 	add A, #1
@@ -75,7 +73,6 @@ Buzzer_ISR_Check_Beep:
 	
 Buzzer_ISR_Make_Beep:
 	clr A
-	mov Buzzer_Beep_Count, A
 	cpl P1.5
 	
 Buzzer_ISR_end:
