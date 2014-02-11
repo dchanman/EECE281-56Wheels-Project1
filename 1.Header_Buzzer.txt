@@ -10,6 +10,7 @@
 ;		Buzzer_ISR:		Makes the buzzer beep, *prioritized*
 ;		Buzzer_Start_Beep:	Starts the buzzer
 ;		Buzzer_Stop_Beep:	Stops the buzzer
+;		Buzzer_Beep_Multiple(int numBeeps):	Beeps the buzzer numBeeps times
 ;
 ;	Interrupt:
 ;		org 000BH
@@ -22,10 +23,17 @@
 ;		BUZZER_T0_RELOAD EQU 65536-(BUZZER_CLK/(12*2*BUZZER_FREQ))
 ;	Variables:
 ;		Buzzer_Beep_Count	:	ds 1
+;		Buzzer_Beep_Num		:	ds 1
 ;
 ;		Buzzer_Beep_Active		:	dbit 1		
 ;		Buzzer_Continuous_Tone	:	dbit 1
 ;----------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Buzzer_Beep_Multiple(int numBeeps)
+;;
+;;Macro function that beeps the buzzer 'numBeeps' times
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Buzzer_ISR
