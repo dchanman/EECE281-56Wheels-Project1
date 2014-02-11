@@ -84,18 +84,58 @@ Init_Timer:
     setb ET1 ; Enable timer 1 interrupt
     ret
     
-;;
-;;
-;;
-; Look-up table for 7-segment displays
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Look-up table for 7-segment displays
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Timer_LUT:
     DB 0C0H, 0F9H, 0A4H, 0B0H, 099H
     DB 092H, 082H, 0F8H, 080H, 090H
     DB 0FFH ; All segments off
     
-;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Resets the elapsed time
+;;  
+;;@modifies ACC, Timer_Elapsed_Time
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Timer_Reset_Elapsed_Time:
+	clr A
+	mov Timer_Elapsed_Time+0, A
+	mov Timer_Elapsed_Time+1, A
+	ret
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Resets both elapsed and total time
+;;  
+;;@modifies ACC, Timer_Elapsed_Time
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Timer_Reset:
+	clr A
+	mov Timer_Elapsed_Time+0, A
+	mov Timer_Elapsed_Time+1, A
+	mov Timer_Total_Time_Seconds, A
+	mov Timer_Total_Time_Minutes, A
+	ret
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Clears HEX Displays
+;;  
+;;@modifies ACC, Timer_Elapsed_Time
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Timer_Clear:
+	mov A, #0FFH
+	mov HEX0, A
+	mov HEX1, A
+	mov HEX2, A
+	mov HEX3, A
+	mov HEX4, A
+	mov HEX5, A
+	mov HEX6, A
+	mov HEX7, A
+	ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Display Timer
-;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Timer_Display:
 	mov dptr, #Timer_LUT
 	mov x+0, Timer_Elapsed_Time+0
