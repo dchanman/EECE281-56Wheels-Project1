@@ -1,0 +1,28 @@
+;----------------------------------------------------
+;	Buzzer
+; 
+;	Derek Chan
+;	
+;	Function: Interface for the Buzzer component
+;
+;	Subroutines:
+;		Buzzer_Init:	Initlizes P1MOD, TMOD, ***DOES NOT ENABLE INTERRUPTS***
+;		Buzzer_ISR:		Makes the buzzer beep
+;		Buzzer_Start_Beep:	Starts the buzzer
+;		Buzzer_Stop_Beep:	Stops the buzzer
+;
+;	Interrupt:
+;		org 000BH
+;			ljmp Buzzer_ISR
+;	Registers:
+;		P1.5 - Buzzer
+;	Constants:
+;		BUZZER_CLK EQU 33333333
+;		BUZZER_FREQ EQU 2000
+;		BUZZER_T0_RELOAD EQU 65536-(BUZZER_CLK/(12*2*BUZZER_FREQ))
+;	Variables:
+;		Buzzer_Beep_Count	:	ds 1
+;
+;		Buzzer_Beep_Active		:	dbit 1		
+;		Buzzer_Continuous_Tone	:	dbit 1
+;----------------------------------------------------
