@@ -20,7 +20,7 @@ org 00B8H
 	ljmp ISR_Timer
 		
 DSEG at 30H
-Timer_count10ms: 	ds 1
+Timer_count10ms: 			ds 1
 Timer_Total_Time_Seconds: 	ds 1	;incrementing every second
 Timer_Total_Time_Minutes: 	ds 1	;incrementing every minute
 Timer_Elapsed_Time:			ds 2	;incrementing every second
@@ -53,8 +53,7 @@ My_Program:
     setb EA  ; Enable all interrupts
     
 Timer_Forever:
-	lcall Timer_Display_Elapsed
-	lcall Timer_Display_Total
+	lcall Timer_Display
 
 	mov LEDG, Timer_Elapsed_Time
 		
