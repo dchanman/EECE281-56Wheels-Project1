@@ -29,7 +29,7 @@ def data_gen():
     while True:
        t+=1
        strin = ser.readline()
-       val = string
+       val = strin
        yield t, val
 
 

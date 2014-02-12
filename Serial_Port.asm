@@ -89,9 +89,9 @@ Serial_Port_Putchar:
 Serial_Port_Send_String:
 	mov dptr, #Serial_Port_My_Lut_ASCII
 	
-	jb Temperature_Measured_Sign, Serial_Port_Send_String_positive
-	mov A, #'-'
-	lcall Serial_Port_Putchar
+	;jb Temperature_Measured_Sign, Serial_Port_Send_String_positive
+	;mov A, #'-'
+	;lcall Serial_Port_Putchar
 	
 Serial_Port_Send_String_positive:
 	; Display Digit 5

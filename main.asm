@@ -168,7 +168,7 @@ main_state_standby:
 	mov LEDRA, #00000001B
 	
 	;lcall UI_Set_Up_Parameters
-	;;;
+	;;
 	;;TODO: remove this override
 	;;;
 	mov soak_temperature, #low(150)
@@ -207,6 +207,7 @@ main_state_heating1:
 	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall SSR_Enable	
 	lcall Thermocouple_Update
+	lcall Serial_Port_Send_String
 	lcall Display_Status  ;this is UI_Update
 
 	mov x+0, Temperature_Measured+0
@@ -244,6 +245,7 @@ main_state_soak:
 	lcall waitHalfSec	;delay to make the LCD not glitch up
 	
 	main_Maintain_Temperature(soak_temperature)
+	lcall Serial_Port_Send_String
 	
 	mov x+0, Timer_elapsed_time+0
 	mov x+1, Timer_elapsed_time+1
@@ -282,6 +284,7 @@ main_state_heating2:
 	lcall SSR_Enable	
 	
 	lcall Thermocouple_Update	
+	lcall Serial_Port_Send_String
 	mov x+0, Temperature_Measured+0
 	mov x+1, Temperature_Measured+1
 	mov y+0, reflow_temperature+0
@@ -314,6 +317,7 @@ main_state_reflow:
 	lcall Timer_Display
 	lcall waitHalfSec	;delay to make the LCD not glitch up
 	main_Maintain_Temperature(reflow_temperature)
+	lcall Serial_Port_Send_String
 	
 	mov x+0, Timer_elapsed_time+0
 	mov x+1, Timer_elapsed_time+1
@@ -348,6 +352,7 @@ main_state_cooldown:
 	lcall Timer_Display
 	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall Thermocouple_Update
+	lcall Serial_Port_Send_String
 	lcall SSR_Disable
 	setb Buzzer_Continuous_Tone
 	lcall Buzzer_Start_Beep
@@ -378,6 +383,7 @@ main_state_open_door:
 	lcall Timer_Display
 	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall Thermocouple_Update	
+	lcall Serial_Port_Send_String
 	mov x+0, Temperature_Measured+0
 	mov x+1, Temperature_Measured+1
 	mov y+0, #low(40)
