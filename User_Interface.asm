@@ -160,7 +160,6 @@ jump_preset:
 	ljmp preset
 
 
-
 Wait_for_Confirmation:
 	jnb KEY.2, jump_Settings_Initialization_nonwelcome
 	jnb KEY.1, Return_function
@@ -169,6 +168,8 @@ Wait_for_Confirmation:
 ;Function: Waits for the user to enter a value, and leaves the loop if KEY1 is pressed	
 Wait_for_Values:
 ;Wait_for_Values_loop: 
+	mov bcd+0, #0
+	mov bcd+1, #0
 	lcall Display
 	lcall ReadNumber
 	jnb KEY.1, wait_key1
