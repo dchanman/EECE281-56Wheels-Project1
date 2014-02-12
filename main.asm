@@ -40,6 +40,7 @@ STATE_HEATING2	EQU 3
 STATE_REFLOW	EQU 4
 STATE_COOLDOWN	EQU 5
 STATE_OPEN_DOOR	EQU 6
+STATE_FAILURE	EQU 7	
 
 DSEG at 30H
 
@@ -62,7 +63,7 @@ Buzzer_Beep_Num		:	ds 1
 Timer_count10ms: 	ds 1
 Timer_Total_Time_Seconds: 	ds 1	;incrementing every second
 Timer_Total_Time_Minutes: 	ds 1	;incrementing every minute
-Timer_Elapsed_Time:			ds 1	;incrementing every second
+Timer_Elapsed_Time:			ds 2	;incrementing every second
 
 ;Math16/32 Variables
 x						: ds 2
@@ -148,11 +149,11 @@ main_state_standby:
 	;;;
 	mov soak_temperature, #low(30)
 	mov soak_temperature+1, #high(30)
-	mov soak_time, #5
+	mov soak_time, #20
 	mov soak_time+1, #0
 	mov reflow_temperature, #low(35)
 	mov reflow_temperature+1, #high(35)
-	mov reflow_time, #5
+	mov reflow_time, #20
 	mov reflow_time+1, #0
 	
 	mov state, #STATE_HEATING1
@@ -177,6 +178,8 @@ main_state_standby:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating1:	
 	lcall Timer_Display
+
+	mov LEDRC, #0FFH
 	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall SSR_Enable	
 	lcall Thermocouple_Update
@@ -186,9 +189,6 @@ main_state_heating1:
 	mov x+1, Temperature_Measured+1
 	mov y+0, soak_temperature+0
 	mov y+1, soak_temperature+1
-	
-	mov LEDRA, soak_temperature+0
-	mov LEDRB, soak_temperature+1
 	
 	lcall x_lt_y
 	
@@ -215,7 +215,6 @@ main_state_soak:
 	lcall Display_Status  ;this is UI_Update
 	
 	lcall Timer_Display
-	lcall Timer_Clear
 	
 	main_Maintain_Temperature(soak_temperature)
 	
@@ -358,6 +357,25 @@ main_state_open_door_done:
 	
 	ret
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+;;main_state_failure
+;;
+;;Something went horribly wrong with the process
+;;Wait for user to open door, then reset machine
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_state_failure:
+	lcall Timer_Clear
+	setb Buzzer_Continuous_Tone
+	lcall Buzzer_Start_Beep
+	;lcall LCD_Please_Close_Door
+main_state_failure_loop:
+	lcall Door_check
+	jnb Door_Open, main_state_failure_loop
+	;lcall LCD_Critical_Error
+main_state_failure_forever:
+	sjmp main_state_failure_forever
+	
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;init											
 ;;												
@@ -423,26 +441,16 @@ main_cooldown:
 		lcall main_state_cooldown
 		sjmp main
 main_open_door:
-	cjne A, #STATE_OPEN_DOOR, main_error
+	cjne A, #STATE_OPEN_DOOR, main_failure
 		lcall main_state_open_door
 		sjmp main
+		
+main_failure:
+	cjne A, #STATE_FAILURE, main_error
+		ljmp main_failure
 
 ;if for some reason, our state is an incorrect value, 
 ;	reset the device for safety
 main_error:
-	mov A, #0FFH
-	mov LEDRA, A
-	mov LEDRB, A
-	mov LEDRC, A
-	mov LEDG, A
-	mov HEX0, A
-	mov HEX1, A
-	mov HEX2, A
-	mov HEX3, A
-	mov HEX4, A
-	mov HEX5, A
-	mov HEX6, A
-	mov HEX7, A
-	sjmp main_error
-	;ljmp main_init	
+	ljmp main_init	
 	END
