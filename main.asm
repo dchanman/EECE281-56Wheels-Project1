@@ -167,18 +167,18 @@ main_Alert_Open_Door_done:
 main_state_standby:
 	mov LEDRA, #00000001B
 	
-	lcall UI_Set_Up_Parameters
+	;lcall UI_Set_Up_Parameters
 	;;;
 	;;TODO: remove this override
 	;;;
-	;mov soak_temperature, #low(30)
-	;mov soak_temperature+1, #high(30)
-	;mov soak_time, #20
-	;mov soak_time+1, #0
-	;mov reflow_temperature, #low(35)
-	;mov reflow_temperature+1, #high(35)
-	;mov reflow_time, #20
-	;mov reflow_time+1, #0
+	mov soak_temperature, #low(150)
+	mov soak_temperature+1, #high(150)
+	mov soak_time, #low(90)
+	mov soak_time+1, #high(90)
+	mov reflow_temperature, #low(217)
+	mov reflow_temperature+1, #high(217)
+	mov reflow_time, #low(55)
+	mov reflow_time+1, #high(55)
 	
 	mov state, #STATE_HEATING1
 	lcall Timer_Reset
@@ -326,7 +326,8 @@ main_state_reflow:
 	mov state, #STATE_COOLDOWN
 	Buzzer_Beep_Multiple(4)
 	lcall Timer_Reset_Elapsed_Time
-	mov target_temperature, #0
+	mov target_temperature, #low(40)
+	mov target_temperature+1, #high(40)
 
 main_state_reflow_done:
 	ret
@@ -356,7 +357,7 @@ main_state_cooldown:
 	mov state, #STATE_OPEN_DOOR
 	lcall Buzzer_Stop_Beep
 	clr Buzzer_Continuous_Tone
-	lcall Timer_Reset
+	lcall Timer_Reset_Elapsed_Time
 	
 main_state_cooldown_done:	
 	ret

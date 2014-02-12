@@ -11,12 +11,12 @@ $MODDE2
 
 XTAL           EQU 33333333
 FREQ           EQU 100
-TIMER1_RELOAD  EQU 65538-(XTAL/(12*10*FREQ))
+TIMER1_RELOAD  EQU 65538-(XTAL/(12*20*FREQ))
 
 org 0000H
 	ljmp My_Program
 
-org 00B8H
+org 00B3H
 	ljmp ISR_Timer
 		
 DSEG at 30H
