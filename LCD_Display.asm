@@ -841,7 +841,7 @@ Display_Status:
 	 anl a, #00001111B
 	 orl a, #30H
 	 lcall LCD_put
-	 mov a, bcd+1
+	 mov a, bcd+0
 	 swap a
 	 anl a, #00001111B
 	 orl a, #30H
@@ -860,8 +860,8 @@ Display_Status:
 	 lcall LCD_put
 	 mov a, #':'
 	 lcall LCD_put
-	 mov bcd+0, target_temperature+0
-	 mov bcd+1, target_temperature+1
+	 mov x+0, target_temperature+0
+	 mov x+1, target_temperature+1
 	 lcall hex2bcd
 	 mov a, bcd+1
 	 anl a, #00001111B
@@ -900,7 +900,7 @@ Display_Status:
 	
 	;need to have logic to test which state we're in
 	mov a, state
-	cjne a, STATE_STANDBY, G1
+	cjne a, #STATE_STANDBY, G1
 	mov a, #'S'
 	lcall LCD_put
 	mov a, #'t'
@@ -924,7 +924,7 @@ Display_Status:
 	mov a, #' '
 	lcall LCD_put
 G1: mov a, state
-	cjne a, STATE_HEATING1, G2
+	cjne a, #STATE_HEATING1, G2
 	mov a, #'H'
 	lcall LCD_put
 	mov a, #'e'
@@ -948,7 +948,7 @@ G1: mov a, state
 	mov a, #' '
 	lcall LCD_put
 G2: mov a, state
-	cjne a, STATE_SOAK, G3
+	cjne a, #STATE_SOAK, G3
 	mov a, #'S'
 	lcall LCD_put
 	mov a, #'o'
@@ -972,7 +972,7 @@ G2: mov a, state
 	mov a, #' '
 	lcall LCD_put
 G3: mov a, state
-	cjne a, STATE_HEATING2, G4
+	cjne a, #STATE_HEATING2, G4
 	mov a, #'H'
 	lcall LCD_put
 	mov a, #'e'
@@ -996,7 +996,7 @@ G3: mov a, state
 	mov a, #' '
 	lcall LCD_put
 G4: mov a, state
-	cjne a, STATE_REFLOW, G5
+	cjne a, #STATE_REFLOW, G5
 	mov a, #'R'
 	lcall LCD_put
 	mov a, #'e'
@@ -1020,7 +1020,7 @@ G4: mov a, state
 	mov a, #' '
 	lcall LCD_put
 G5: mov a, state
-	cjne a, STATE_COOLDOWN, G6
+	cjne a, #STATE_COOLDOWN, G6
 	mov a, #'C'
 	lcall LCD_put
 	mov a, #'o'
@@ -1044,7 +1044,7 @@ G5: mov a, state
 	mov a, #' '
 	lcall LCD_put
 G6: mov a, state
-	cjne a, STATE_OPEN_DOOR, G7
+	cjne a, #STATE_OPEN_DOOR, G7
 	mov a, #'O'
 	lcall LCD_put
 	mov a, #'p'
