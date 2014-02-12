@@ -149,8 +149,6 @@ Timer_Display_Elapsed:
 	mov dptr, #Timer_LUT
 	mov x+0, Timer_Elapsed_Time+0
 	mov x+1, Timer_Elapsed_Time+1
-	mov LEDG, x+0
-	mov LEDRA, x+1
 	lcall hex2bcd
 	
 	mov a, bcd+0

@@ -13,6 +13,7 @@ org 001BH
 FREQ	EQU 33333333
 BAUD	EQU 115200
 T2LOAD	EQU 65536-(FREQ/(32*BAUD))
+THERMO_TEMP_ADJ		EQU		10			;negative offset because LM335 reports too high
 
 ;Serial Port Constants
 MISO	EQU  P0.0 
@@ -128,6 +129,28 @@ main_Maintain_Temperature_tooCold:
 	lcall SSR_Enable
 	ret
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;main_Alert_Open_Door
+;;
+;;Stalling code that stops all functions until the
+;;door is closed
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+main_Alert_Open_Door:
+	lcall Door_Check
+	jnb Door_Open, main_Alert_Open_Door_done
+	;lcall LCD_Please_Close_Door
+	setb Buzzer_Continuous_Tone
+	clr ET1
+	lcall Buzzer_Start_Beep
+main_Alert_Open_Door_loop:
+	lcall Door_Check
+	jnb Door_Open, main_Alert_Open_Door_loop	
+	setb ET1
+	clr Buzzer_Continuous_Tone
+	lcall Buzzer_Stop_Beep	
+main_Alert_Open_Door_done:	
+	ret
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;main_state_standby
 ;;
@@ -142,19 +165,20 @@ main_Maintain_Temperature_tooCold:
 ;;	*On button pressed 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_standby:
+	mov LEDRA, #00000001B
 	
-	;lcall UI_Set_Up_Parameters
+	lcall UI_Set_Up_Parameters
 	;;;
 	;;TODO: remove this override
 	;;;
-	mov soak_temperature, #low(30)
-	mov soak_temperature+1, #high(30)
-	mov soak_time, #20
-	mov soak_time+1, #0
-	mov reflow_temperature, #low(35)
-	mov reflow_temperature+1, #high(35)
-	mov reflow_time, #20
-	mov reflow_time+1, #0
+	;mov soak_temperature, #low(30)
+	;mov soak_temperature+1, #high(30)
+	;mov soak_time, #20
+	;mov soak_time+1, #0
+	;mov reflow_temperature, #low(35)
+	;mov reflow_temperature+1, #high(35)
+	;mov reflow_time, #20
+	;mov reflow_time+1, #0
 	
 	mov state, #STATE_HEATING1
 	lcall Timer_Reset
@@ -177,9 +201,9 @@ main_state_standby:
 ;;	*Temperature_Measured == soak_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating1:	
+	mov LEDRA, #00000011B
+	lcall main_Alert_Open_Door
 	lcall Timer_Display
-
-	mov LEDRC, #0FFH
 	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall SSR_Enable	
 	lcall Thermocouple_Update
@@ -212,9 +236,12 @@ main_state_heating1_done:
 ;;		*elapsed_time == soak_time 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_soak:
+	mov LEDRA, #00000111B
+	lcall main_Alert_Open_Door
 	lcall Display_Status  ;this is UI_Update
 	
 	lcall Timer_Display
+	lcall waitHalfSec	;delay to make the LCD not glitch up
 	
 	main_Maintain_Temperature(soak_temperature)
 	
@@ -223,9 +250,6 @@ main_state_soak:
 	mov y+0, soak_time+0
 	mov y+1, soak_time+1
 	
-	mov LEDRA, Timer_elapsed_time+0
-	mov LEDRB, Timer_elapsed_time+1
-
 	lcall x_lt_y
 	jb mf, main_state_soak_done
 	
@@ -250,8 +274,11 @@ main_state_soak_done:
 ;;		*Temperature_Measured == reflow_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating2:
+	mov LEDRA, #00001111B
+	lcall main_Alert_Open_Door
 	lcall Display_Status  ;this is UI_Update
 	lcall Timer_Display
+	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall SSR_Enable	
 	
 	lcall Thermocouple_Update	
@@ -281,8 +308,11 @@ main_state_heating2_done:
 ;;		*elapsed_time == reflow_time
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_reflow:
+	mov LEDRA, #000111111B
+	lcall main_Alert_Open_Door
 	lcall Display_Status  ;this is UI_Update
 	lcall Timer_Display
+	lcall waitHalfSec	;delay to make the LCD not glitch up
 	main_Maintain_Temperature(reflow_temperature)
 	
 	mov x+0, Timer_elapsed_time+0
@@ -312,16 +342,20 @@ main_state_reflow_done:
 ;;		*Door_Open == true
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_cooldown:
+	mov LEDRA, #00111111B
 	lcall Display_Status  ;this is UI_Update
 	lcall Timer_Display
+	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall Thermocouple_Update
 	lcall SSR_Disable
+	setb Buzzer_Continuous_Tone
 	lcall Buzzer_Start_Beep
 	
 	lcall Door_Check
 	jnb Door_Open, main_state_cooldown_done
 	mov state, #STATE_OPEN_DOOR
 	lcall Buzzer_Stop_Beep
+	clr Buzzer_Continuous_Tone
 	lcall Timer_Reset
 	
 main_state_cooldown_done:	
@@ -338,8 +372,10 @@ main_state_cooldown_done:
 ;;		*Temperature_Measured < 40 degrees C
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_open_door:
+	mov LEDRA, #01111111B
 	lcall Display_Status  ;this is UI_Update
 	lcall Timer_Display
+	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall Thermocouple_Update	
 	mov x+0, Temperature_Measured+0
 	mov x+1, Temperature_Measured+1
@@ -391,6 +427,20 @@ main_init:
 	mov LEDRB, A
 	mov LEDRC, A
 	mov state, #STATE_STANDBY	;initialize state
+	
+	mov soak_temperature, A
+	mov soak_time, A
+	mov reflow_temperature, A
+	mov reflow_time, A
+	mov target_temperature, A
+	mov temperature_measured, A
+	mov outside_temperature_measured, A
+	mov soak_temperature+1, A
+	mov soak_time+1, A
+	mov reflow_temperature+1, A
+	mov reflow_time+1, A
+	mov target_temperature+1, A
+	mov temperature_measured+1, A
 	
 	lcall SSR_init
 	lcall Serial_Port_init

@@ -56,6 +56,8 @@ Thermocouple_Update:
 	lcall Thermocouple_ReadCH1
 	mov A, Temperature_Measured+0
 	add A, Outside_Temperature_Measured
+	clr c
+	subb A, #THERMO_TEMP_ADJ
 	mov Temperature_Measured+0, A
 	mov A, Temperature_Measured+1
 	addc A, #0
