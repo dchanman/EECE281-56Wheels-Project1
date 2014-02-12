@@ -172,7 +172,7 @@ Wait_for_Values:
 ;Wait_for_Values_loop: 
 	mov bcd+0, #0
 	mov bcd+1, #0
-Wait_for_Values_loop	
+Wait_for_Values_loop:	
 	lcall Display
 	lcall ReadNumber
 	jnb KEY.1, wait_key1

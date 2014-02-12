@@ -87,6 +87,9 @@ Serial_Port_Putchar:
 ;			BCD+0, BCD+1, BCD+2	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Serial_Port_Send_String:
+	mov x+0, Temperature_Measured
+	mov x+1, Temperature_Measured+1
+	lcall hex2bcd
 	mov dptr, #Serial_Port_My_Lut_ASCII
 	
 	;jb Temperature_Measured_Sign, Serial_Port_Send_String_positive
