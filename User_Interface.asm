@@ -172,6 +172,7 @@ Wait_for_Values:
 ;Wait_for_Values_loop: 
 	mov bcd+0, #0
 	mov bcd+1, #0
+Wait_for_Values_loop	
 	lcall Display
 	lcall ReadNumber
 	jnb KEY.1, wait_key1
@@ -179,7 +180,7 @@ Wait_for_Values:
 	lcall Shift_Digits
 	lcall Display
 
-	ljmp Wait_for_Values
+	ljmp Wait_for_Values_loop
 
 
 ;waits for KEY1 to be unpressed
