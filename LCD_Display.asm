@@ -148,7 +148,7 @@ Display_welcome_message:
 	lcall LCD_put
 	ret
 	
-Display_open_door
+Display_open_door:
 ; Display the first row	
 	mov a, #80H
 	lcall LCD_command
@@ -224,7 +224,7 @@ Display_open_door
 	lcall LCD_put
 	ret
 
-Display_close_door
+Display_close_door:
 ; Display the first row	
 	mov a, #80H
 	lcall LCD_command
@@ -300,7 +300,7 @@ Display_close_door
 	lcall LCD_put
 	ret
 	
-Display_fatal_error
+Display_fatal_error:
 ; Display the first row	
 	mov a, #80H
 	lcall LCD_command
