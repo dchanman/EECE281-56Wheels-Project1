@@ -11,7 +11,7 @@ $MODDE2
 
 XTAL           EQU 33333333
 FREQ           EQU 100
-TIMER1_RELOAD  EQU 65538-(XTAL/(12*100*FREQ))
+TIMER1_RELOAD  EQU 65538-(XTAL/(12*10*FREQ))
 
 org 0000H
 	ljmp My_Program
@@ -52,10 +52,10 @@ My_Program:
 	lcall Init_Timer
     setb EA  ; Enable all interrupts
     
-
-
 Timer_Forever:
-	lcall Timer_Display
+	lcall Timer_Display_Elapsed
+	lcall Timer_Display_Total
+
 	mov LEDG, Timer_Elapsed_Time
 		
 	jb SWA.1, Timer_Reset_TimeElapsed

@@ -46,21 +46,34 @@ ISR_Timer:
     mov A, Timer_Elapsed_Time+1
     addc a, #0
     mov Timer_Elapsed_Time+1, A
-
-Timer_Seconds:    
+    
     mov a, Timer_Total_Time_Seconds
     add a, #1
+    mov Timer_Total_Time_Seconds, a
     cjne A, #60, ISR_Timer1_L0
-    mov a, #0
-    mov Timer_Total_Time_Seconds, a 
+    mov Timer_Total_Time_Seconds, #0
 
-Timer_Minutes:   
     mov a, Timer_Total_Time_Minutes
     add a, #1
+    mov Timer_Total_Time_Minutes, a
     cjne A, #60, ISR_Timer1_L0
-    mov a, #0
-    mov Timer_Total_Time_Minutes, a    
+    mov Timer_Total_Time_Minutes, #0
 
+    ;mov a, Timer_Total_Time_Seconds
+    ;add a, #1
+    ;da a
+    ;mov Timer_Total_Time_Seconds, a
+    ;cjne A, #60, ISR_Timer1_L0
+    ;cpl LEDRA.3
+    ;mov Timer_Total_Time_Seconds, #0
+
+    ;mov a, Timer_Total_Time_Minutes
+    ;add a, #1
+    ;mov Timer_Total_Time_Minutes, a
+    ;cjne A, #60, ISR_Timer1_L0
+    ;cpl LEDRA.2
+    ;mov Timer_Total_Time_Minutes, #0
+     
 ISR_Timer1_L0:	
 	; Restore used registers
 	pop dpl
@@ -137,7 +150,7 @@ Timer_Clear:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Display Timer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-Timer_Display:
+Timer_Display_Elapsed:
 	mov dptr, #Timer_LUT
 	mov x+0, Timer_Elapsed_Time+0
 	mov x+1, Timer_Elapsed_Time+1
@@ -166,12 +179,12 @@ Timer_Display:
 	anl a, #0fH
 	movc a, @a+dptr
 	mov HEX3, a
+	ret
 	
-;TOTAL TIME
+Timer_Display_Total:
 	mov dptr, #Timer_LUT
 		
-	mov x+0, Timer_Total_Time_Seconds
-	mov x+1, Timer_Total_Time_Minutes
+	mov x, Timer_Total_Time_Seconds
 	lcall hex2bcd
 	
 	mov a, bcd+0
@@ -185,15 +198,19 @@ Timer_Display:
 	movc a, @a+dptr
 	mov HEX5, a
 
-	mov a, bcd+1
+	mov x, Timer_Total_Time_Minutes
+	lcall hex2bcd
+	
+	mov a, bcd+0
 	anl a, #0fH
 	movc a, @a+dptr
 	mov HEX6, a
 	
-	mov a, bcd+1
+	mov a, bcd+0
 	swap a
 	anl a, #0fH
 	movc a, @a+dptr
 	mov HEX7, a
 	ret
+	
 $LIST
