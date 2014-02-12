@@ -5,6 +5,9 @@ org 0000H
    
 org 000BH
 	ljmp Buzzer_ISR
+	
+org 001BH
+	ljmp ISR_Timer
       
 ;Thermocouple Constants
 FREQ	EQU 33333333
@@ -27,7 +30,7 @@ BUZZER_T0_RELOAD EQU 65536-(BUZZER_CLK/(12*2*BUZZER_FREQ))
 ;Timer Constants
 Timer_XTAL           EQU 33333333
 Timer_FREQ           EQU 100
-TIMER1_RELOAD  EQU 65538-(Timer_XTAL/(12*100*Timer_FREQ))
+TIMER1_RELOAD  EQU 65538-(Timer_XTAL/(12*Timer_FREQ))
 
 ;State Constants
 STATE_STANDBY 	EQU 0
@@ -139,10 +142,23 @@ main_Maintain_Temperature_tooCold:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_standby:
 	
-	lcall UI_Set_Up_Parameters
+	;lcall UI_Set_Up_Parameters
+	;;;
+	;;TODO: remove this override
+	;;;
+	mov soak_temperature, #low(30)
+	mov soak_temperature+1, #high(30)
+	mov soak_time, #5
+	mov soak_time+1, #0
+	mov reflow_temperature, #low(35)
+	mov reflow_temperature+1, #high(35)
+	mov reflow_time, #5
+	mov reflow_time+1, #0
+	
 	mov state, #STATE_HEATING1
 	lcall Timer_Reset
 	mov target_temperature, soak_temperature
+	mov target_temperature+1, soak_temperature+1
 	
 	
 	
@@ -159,26 +175,24 @@ main_state_standby:
 ;;	STATE_SOAK:
 ;;	*Temperature_Measured == soak_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-main_state_heating1:
-	lcall Display_Status  ;this is UI_Update
-	
-	lcall waitHalfSec
-	lcall waitHalfSec
-	lcall waitHalfSec
-	lcall waitHalfSec
-	
+main_state_heating1:	
 	lcall Timer_Display
+	lcall waitHalfSec	;delay to make the LCD not glitch up
 	lcall SSR_Enable	
-	
-	
 	lcall Thermocouple_Update
+	lcall Display_Status  ;this is UI_Update
+
 	mov x+0, Temperature_Measured+0
 	mov x+1, Temperature_Measured+1
 	mov y+0, soak_temperature+0
 	mov y+1, soak_temperature+1
 	
+	mov LEDRA, soak_temperature+0
+	mov LEDRB, soak_temperature+1
+	
 	lcall x_lt_y
-	jb mf, main_state_heating1_done	
+	
+	jb mf, main_state_heating1_done		
 	mov state, #STATE_SOAK
 	Buzzer_Beep_Multiple(4)
 	lcall Timer_Reset_Elapsed_Time
@@ -199,7 +213,10 @@ main_state_heating1_done:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_soak:
 	lcall Display_Status  ;this is UI_Update
+	
 	lcall Timer_Display
+	lcall Timer_Clear
+	
 	main_Maintain_Temperature(soak_temperature)
 	
 	mov x+0, Timer_elapsed_time+0
@@ -207,6 +224,9 @@ main_state_soak:
 	mov y+0, soak_time+0
 	mov y+1, soak_time+1
 	
+	mov LEDRA, Timer_elapsed_time+0
+	mov LEDRB, Timer_elapsed_time+1
+
 	lcall x_lt_y
 	jb mf, main_state_soak_done
 	
@@ -362,6 +382,8 @@ main_init:
 	lcall LCD_init
 	lcall Buzzer_init
 	
+	setb EA
+	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;main:
 ;
@@ -371,7 +393,6 @@ main_init:
 main:	
 	
 	mov A, state
-	mov LEDRA, A	
 		
 	cjne A, #STATE_STANDBY, main_checkEmergencyStop
 		lcall main_state_standby
@@ -409,7 +430,19 @@ main_open_door:
 ;if for some reason, our state is an incorrect value, 
 ;	reset the device for safety
 main_error:
-	mov HEX3, #00H
+	mov A, #0FFH
+	mov LEDRA, A
+	mov LEDRB, A
+	mov LEDRC, A
+	mov LEDG, A
+	mov HEX0, A
+	mov HEX1, A
+	mov HEX2, A
+	mov HEX3, A
+	mov HEX4, A
+	mov HEX5, A
+	mov HEX6, A
+	mov HEX7, A
 	sjmp main_error
 	;ljmp main_init	
 	END

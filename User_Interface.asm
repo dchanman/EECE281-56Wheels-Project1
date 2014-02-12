@@ -136,7 +136,9 @@ wait_for_preset_values:
 	jnb KEY.3, preset
 	jb SWA.1, option1
 	jb SWA.2, option2
-	jb SWA.3, option3
+	jnb SWA.3, wait_for_preset_values_op3
+	ljmp option3
+wait_for_preset_values_op3:
 	jmp wait_for_preset_values
 
 

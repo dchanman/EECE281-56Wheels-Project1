@@ -53,8 +53,7 @@ My_Program:
     setb EA  ; Enable all interrupts
     
 Timer_Forever:
-	lcall Timer_Display_Elapsed
-	lcall Timer_Display_Total
+	lcall Timer_Display
 
 	mov LEDG, Timer_Elapsed_Time
 		
