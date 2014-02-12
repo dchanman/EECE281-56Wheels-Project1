@@ -13,6 +13,15 @@ STATE_OPEN_DOOR	EQU 6
 	
 DSEG at 30h
 
+soak_temperature : ds 2
+soak_time		 : ds 2
+reflow_temperature: ds 2
+reflow_time       : ds 2
+state			  : ds 2
+
+temperature_measured: ds 2
+target_temperature:  ds 2
+
 ;Math16/32 Variables
 x						: ds 2
 y						: ds 2
@@ -39,6 +48,9 @@ myLUT:
     DB 088H, 083H, 0C6H, 0A1H, 086H, 08EH  ; A to F
 
 $include (LCD_Display.asm)
+$include (Read_sw5.asm)
+$include (User_Interface.asm)
+$include (math16.asm)
 
 main:
 	clr A
@@ -50,10 +62,29 @@ main:
 	
 	lcall LCD_init
 forever:
-	mov state, STATE_STANDBY
+	mov state, #STATE_STANDBY
 	lcall Display_Status
 	lcall waitHalfSec
-	
+	mov state, #STATE_HEATING1
+	mov target_temperature+0, #6bH
+	mov temperature_measured+0, #6bH
+	lcall Display_status
+	lcall waitHalfSec
+	mov state, #STATE_HEATING2
+	lcall Display_status
+	lcall waitHalfSec
+	mov state, #STATE_SOAK
+	lcall Display_status
+	lcall waitHalfSec
+	mov state, #STATE_REFLOW
+	lcall Display_status
+	lcall waitHalfSec
+	mov state, #STATE_COOLING
+	lcall Display_status
+	lcall waitHalfSec
+	mov state, #STATE_OPEN_DOOR
+	lcall Display_status
+	lcall waitHalfSec
 	
 	sjmp forever
 	
