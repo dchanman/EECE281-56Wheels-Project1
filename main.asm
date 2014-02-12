@@ -142,6 +142,9 @@ main_state_standby:
 	lcall UI_Set_Up_Parameters
 	mov state, #STATE_HEATING1
 	lcall Timer_Reset
+	mov target_temperature, soak_temperature
+	
+	
 	
 	ret
 
@@ -158,6 +161,12 @@ main_state_standby:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating1:
 	lcall Display_Status  ;this is UI_Update
+	
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+	
 	lcall Timer_Display
 	lcall SSR_Enable	
 	
@@ -206,6 +215,7 @@ main_state_soak:
 	mov target_temperature+1, reflow_temperature+1
 	Buzzer_Beep_Multiple(4)
 	lcall Timer_Reset_Elapsed_Time
+	mov target_temperature, reflow_temperature
 
 main_state_soak_done:
 	ret
@@ -267,6 +277,7 @@ main_state_reflow:
 	mov state, #STATE_COOLDOWN
 	Buzzer_Beep_Multiple(4)
 	lcall Timer_Reset_Elapsed_Time
+	mov target_temperature, #0
 
 main_state_reflow_done:
 	ret
@@ -334,6 +345,7 @@ main_state_open_door_done:
 ;;all of the components for the controller.		
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_init:
+	mov SP, #7FH
 	clr A
 	clr C
 	mov LEDG, A
@@ -345,8 +357,10 @@ main_init:
 	lcall SSR_init
 	lcall Serial_Port_init
 	lcall Thermocouple_Input_init
-	;lcall User_Interface_init
+	lcall Init_Timer
+	lcall Door_init
 	lcall LCD_init
+	lcall Buzzer_init
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;main:
@@ -357,44 +371,45 @@ main_init:
 main:	
 	
 	mov A, state
-	
+	mov LEDRA, A	
 		
-	cjne A, STATE_STANDBY, main_checkEmergencyStop
+	cjne A, #STATE_STANDBY, main_checkEmergencyStop
 		lcall main_state_standby
+		sjmp main
 		
-	
-
 ;check emergency stop button
 main_checkEmergencyStop:
 	;lcall check_emergency_stop
 		
 main_heating1:
-	cjne A, STATE_HEATING1, main_soak
-		lcall main_state_standby	
+	cjne A, #STATE_HEATING1, main_soak
+		lcall main_state_heating1
 		sjmp main
 main_soak:
-	cjne A, STATE_SOAK, main_heating2
+	cjne A, #STATE_SOAK, main_heating2
 		lcall main_state_soak
 		sjmp main
 main_heating2:
-	cjne A, STATE_HEATING2, main_reflow
+	cjne A, #STATE_HEATING2, main_reflow
 		lcall main_state_heating2
 		sjmp main
 main_reflow:
-	cjne A, STATE_REFLOW, main_cooldown
+	cjne A, #STATE_REFLOW, main_cooldown
 		lcall main_state_reflow
 		sjmp main
 main_cooldown:
-	cjne A, STATE_COOLDOWN, main_open_door
+	cjne A, #STATE_COOLDOWN, main_open_door
 		lcall main_state_cooldown
 		sjmp main
 main_open_door:
-	cjne A, STATE_OPEN_DOOR, main_error
+	cjne A, #STATE_OPEN_DOOR, main_error
 		lcall main_state_open_door
 		sjmp main
 
 ;if for some reason, our state is an incorrect value, 
 ;	reset the device for safety
 main_error:
-	ljmp main_init	
+	mov HEX3, #00H
+	sjmp main_error
+	;ljmp main_init	
 	END

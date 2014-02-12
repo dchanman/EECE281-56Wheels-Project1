@@ -14,6 +14,7 @@ CSEG
 
 SSR_Init:
 	orl P1MOD, #00000001B
+	clr P1.0
 	ret
 	
 SSR_Enable:
