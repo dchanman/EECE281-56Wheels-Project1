@@ -96,6 +96,10 @@ Init_Timer:
     mov TL1, #low(TIMER1_RELOAD)            ;PLEASE EXPLAIN WHAT THIS IS
     setb TR1 ; Enable timer 1
     setb ET1 ; Enable timer 1 interrupt
+    mov Timer_Total_Time_Seconds, #000H
+	mov Timer_Total_Time_Minutes, #0H
+	mov Timer_Elapsed_Time, #000H
+	mov Timer_Elapsed_Time+1, #0H
     ret
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -150,6 +154,12 @@ Timer_Clear:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Display Timer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Timer_Display:
+	lcall Timer_Display_Elapsed
+	lcall Timer_Display_Total
+	ret
+
+
 Timer_Display_Elapsed:
 	mov dptr, #Timer_LUT
 	mov x+0, Timer_Elapsed_Time+0
