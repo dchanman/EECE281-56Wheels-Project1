@@ -13,10 +13,10 @@ import serial
 
 # configure the serial port
 
-xsize=1000
+xsize=1100
 
 ser = serial.Serial(
-    port='COM4',
+    port='COM5',
     baudrate=115200,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_TWO,
@@ -53,7 +53,7 @@ fig = plt.figure()
 fig.canvas.mpl_connect('close_event', on_close_figure)
 ax = fig.add_subplot(111)
 line, = ax.plot([], [], lw=2)
-ax.set_ylim(0, 300)
+ax.set_ylim(0, 250)
 ax.set_xlim(0, xsize)
 ax.grid()
 xdata, ydata = [], []

@@ -13,7 +13,7 @@ org 001BH
 FREQ	EQU 33333333
 BAUD	EQU 115200
 T2LOAD	EQU 65536-(FREQ/(32*BAUD))
-THERMO_TEMP_ADJ		EQU		10			;negative offset because LM335 reports too high
+THERMO_TEMP_ADJ		EQU		5			;negative offset because LM335 reports too high
 
 ;Serial Port Constants
 MISO	EQU  P0.0 
@@ -167,18 +167,18 @@ main_Alert_Open_Door_done:
 main_state_standby:
 	mov LEDRA, #00000001B
 	
-	lcall UI_Set_Up_Parameters
+	;lcall UI_Set_Up_Parameters
 	;;
 	;;TODO: remove this override
 	;;;
-	;mov soak_temperature, #low(150)
-	;mov soak_temperature+1, #high(150)
-	;mov soak_time, #low(90)
-	;mov soak_time+1, #high(90)
-	;mov reflow_temperature, #low(217)
-	;mov reflow_temperature+1, #high(217)
-	;mov reflow_time, #low(55)
-	;mov reflow_time+1, #high(55)
+	mov soak_temperature, #low(150)
+	mov soak_temperature+1, #high(150)
+	mov soak_time, #low(90)
+	mov soak_time+1, #high(90)
+	mov reflow_temperature, #low(217)
+	mov reflow_temperature+1, #high(217)
+	mov reflow_time, #low(55)
+	mov reflow_time+1, #high(55)
 	
 	mov state, #STATE_HEATING1
 	lcall Timer_Reset
