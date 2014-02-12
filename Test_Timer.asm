@@ -43,8 +43,7 @@ My_Program:
 	mov LEDRB,#0
 	mov LEDRC,#0
 	mov LEDG,#0
-	mov HEX2, #0FFH
-	mov HEX3, #0FFH
+	
 	mov Timer_Total_Time_Seconds, #000H
 	mov Timer_Total_Time_Minutes, #0H
 	mov Timer_Elapsed_Time, #000H
@@ -56,17 +55,18 @@ My_Program:
 
 
 Timer_Forever:
-
 	lcall Timer_Display
 	mov LEDG, Timer_Elapsed_Time
-	
-Timer_Forever_Subroutine:	
-	jb SWA.1, Timer_Reset_TimeElapsed	
+		
+	jb SWA.1, Timer_Reset_TimeElapsed
+	jb SWA.2, Timer_Reset_Everything
 	sjmp Timer_Forever
 
 Timer_Reset_TimeElapsed:
-	mov Timer_Elapsed_Time, #00H
-	mov Timer_Elapsed_Time+1, #00H
+	lcall Timer_Reset_Elapsed_Time
 	sjmp Timer_Forever
 	
+Timer_Reset_Everything:
+	lcall Timer_Reset
+	sjmp Timer_Forever
 END

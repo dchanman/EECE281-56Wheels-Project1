@@ -167,7 +167,9 @@ Timer_Display:
 	movc a, @a+dptr
 	mov HEX3, a
 	
-;TOTAL TIME	
+;TOTAL TIME
+	mov dptr, #Timer_LUT
+		
 	mov x+0, Timer_Total_Time_Seconds
 	mov x+1, Timer_Total_Time_Minutes
 	lcall hex2bcd
