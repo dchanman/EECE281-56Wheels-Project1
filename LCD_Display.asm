@@ -1649,6 +1649,225 @@ Display_Options:
 	lcall LCD_put
 	mov a, #' '
 	lcall LCD_put
+	ret
+	
+display_soak_temperature_high
+	mov a, #80h
+	lcall LCD_command
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'k'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'x'
+	lcall LCD_put
+	mov a, #'c'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'d'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'M'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'x'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+ret
+
+display_reflow_temperature_high
+	mov a, #80h
+	lcall LCD_command
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'x'
+	lcall LCD_put
+	mov a, #'c'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'d'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'M'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'x'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+ret
+
+display_reflow_time_high
+	mov a, #80h
+	lcall LCD_command
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #':'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'f'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #'E'
+	lcall LCD_put
+	mov a, #'x'
+	lcall LCD_put
+	mov a, #'c'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'d'
+	lcall LCD_put
+	mov a, #'s'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'M'
+	lcall LCD_put
+	mov a, #'a'
+	lcall LCD_put
+	mov a, #'x'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'T'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+ret
+
+ret
 
 end
 
