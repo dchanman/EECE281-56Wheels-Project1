@@ -271,10 +271,27 @@ ret
 
 test_proper_values:
 ;Compares all temperatures and sees if the soak temp and reflow temp is less than 235
+;if it is too high, display error, then jump to setting up parameters again
 lcall display_soak_temperature_high
+lcall waitHalfSec
+lcall waitHalfSec
+lcall waitHalfSec
+lcall waitHalfSec
+
+;if it is too high, display error, then jump to setting up parameters again
 lcall display_reflow_temperature_high
+lcall WaitHalfSec
+lcall waitHalfSec
+lcall waitHalfSec
+lcall waitHalfSec
 
 ;Compares to see if the reflow time is less or equal to 45
+;if it is too high, display error, then jump to setting up parameters again
 lcall display_reflow_time_high
+lcall waitHalfSec
+lcall waitHalfSec
+lcall waitHalfSec
+
+;if everything is fine, continue with the process
 ret
 end
