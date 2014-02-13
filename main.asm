@@ -168,6 +168,7 @@ main_state_standby:
 	mov LEDRA, #10000000B
 	
 	lcall UI_Set_Up_Parameters
+	lcall test_proper_values
 	;;
 	;;TODO: remove this override
 	;;;
