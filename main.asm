@@ -165,7 +165,7 @@ main_Alert_Open_Door_done:
 ;;	*On button pressed 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_standby:
-	mov LEDRA, #00000001B
+	mov LEDRA, #10000000B
 	
 	lcall UI_Set_Up_Parameters
 	;;
@@ -201,7 +201,7 @@ main_state_standby:
 ;;	*Temperature_Measured == soak_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating1:	
-	mov LEDRA, #00000011B
+	mov LEDRA, #11000000B
 	lcall main_Alert_Open_Door
 	lcall Timer_Display
 	lcall waitHalfSec	;delay to make the LCD not glitch up
@@ -237,7 +237,7 @@ main_state_heating1_done:
 ;;		*elapsed_time == soak_time 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_soak:
-	mov LEDRA, #00000111B
+	mov LEDRA, #11100000B
 	lcall main_Alert_Open_Door
 	lcall Display_Status  ;this is UI_Update
 	
@@ -276,7 +276,7 @@ main_state_soak_done:
 ;;		*Temperature_Measured == reflow_temperature
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_heating2:
-	mov LEDRA, #00001111B
+	mov LEDRA, #11110000B
 	lcall main_Alert_Open_Door
 	lcall Display_Status  ;this is UI_Update
 	lcall Timer_Display
@@ -311,7 +311,7 @@ main_state_heating2_done:
 ;;		*elapsed_time == reflow_time
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_reflow:
-	mov LEDRA, #000111111B
+	mov LEDRA, #11111000B
 	lcall main_Alert_Open_Door
 	lcall Display_Status  ;this is UI_Update
 	lcall Timer_Display
@@ -347,7 +347,7 @@ main_state_reflow_done:
 ;;		*Door_Open == true
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_cooldown:
-	mov LEDRA, #00111111B
+	mov LEDRA, #11111100B
 	lcall Display_Status  ;this is UI_Update
 	lcall Timer_Display
 	lcall waitHalfSec	;delay to make the LCD not glitch up
@@ -378,7 +378,7 @@ main_state_cooldown_done:
 ;;		*Temperature_Measured < 40 degrees C
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_state_open_door:
-	mov LEDRA, #01111111B
+	mov LEDRA, #11111110B
 	lcall Display_Status  ;this is UI_Update
 	lcall Timer_Display
 	lcall waitHalfSec	;delay to make the LCD not glitch up
