@@ -52,6 +52,7 @@ reflow_temperature		: ds 2
 reflow_time		 		: ds 2
 target_temperature		: ds 2
 
+
 ;Thermocouple Variables
 Temperature_Measured	: ds 2
 Outside_Temperature_Measured:	ds 2
@@ -88,6 +89,9 @@ Buzzer_Continuous_Tone	:	dbit 1
 
 ;Thermo2 Variables
 Temperature_Measured_Sign	:	dbit 1
+
+;UI Variables
+UI_Input_Error			: dbit 1
 
 
 CSEG
@@ -136,18 +140,33 @@ main_Maintain_Temperature_tooCold:
 ;;door is closed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 main_Alert_Open_Door:
+	
+	
 	lcall Door_Check
 	jnb Door_Open, main_Alert_Open_Door_done
-	;lcall LCD_Please_Close_Door
+	lcall Display_Close_Door
 	setb Buzzer_Continuous_Tone
 	clr ET1
 	lcall Buzzer_Start_Beep
+	
+	mov A, #0FFH	
+		mov LEDRA, A
+	mov LEDRB, A
+	mov LEDRC, A
+	mov LEDG, A
+	
 main_Alert_Open_Door_loop:
 	lcall Door_Check
-	jnb Door_Open, main_Alert_Open_Door_loop	
+	jb Door_Open, main_Alert_Open_Door_loop	
 	setb ET1
 	clr Buzzer_Continuous_Tone
 	lcall Buzzer_Stop_Beep	
+	
+		mov A, #0
+		mov LEDRA, A
+	mov LEDRB, A
+	mov LEDRC, A
+	mov LEDG, A
 main_Alert_Open_Door_done:	
 	ret
 
@@ -167,19 +186,20 @@ main_Alert_Open_Door_done:
 main_state_standby:
 	mov LEDRA, #10000000B
 	
-	lcall UI_Set_Up_Parameters
-	lcall test_proper_values
+	;lcall UI_Set_Up_Parameters
+	;lcall test_proper_values
+	;jb UI_Input_Error, main_state_standby
 	;;
 	;;TODO: remove this override
 	;;;
-	;mov soak_temperature, #low(150)
-	;mov soak_temperature+1, #high(150)
-	;mov soak_time, #low(90)
-	;mov soak_time+1, #high(90)
-	;mov reflow_temperature, #low(217)
-	;mov reflow_temperature+1, #high(217)
-	;mov reflow_time, #low(55)
-	;mov reflow_time+1, #high(55)
+	mov soak_temperature, #low(150)
+	mov soak_temperature+1, #high(150)
+	mov soak_time, #low(90)
+	mov soak_time+1, #high(90)
+	mov reflow_temperature, #low(217)
+	mov reflow_temperature+1, #high(217)
+	mov reflow_time, #low(55)
+	mov reflow_time+1, #high(55)
 	
 	mov state, #STATE_HEATING1
 	lcall Timer_Reset
@@ -476,6 +496,16 @@ main:
 		
 ;check emergency stop button
 main_checkEmergencyStop:
+	mov A, SWC
+	jnb ACC.1, main_heating1
+	
+				die:
+		mov LEDRA, A
+		mov LEDRB, A
+		mov LEDRC, A
+		mov LEDG, A
+		sjmp die
+	
 	;lcall check_emergency_stop
 		
 main_heating1:

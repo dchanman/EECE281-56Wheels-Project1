@@ -51,7 +51,7 @@ $NOLIST
 ;
 
 ;----------------------------------------------------
-CSEG
+;CSEG
 	
 
 ;Function: Gets the correct parameters for over control from the user	
@@ -270,28 +270,51 @@ turnoff_7seg:
 ret
 
 test_proper_values:
+	clr UI_Input_Error
 ;Compares all temperatures and sees if the soak temp and reflow temp is less than 235
 ;if it is too high, display error, then jump to setting up parameters again
-lcall display_soak_temperature_high
-lcall waitHalfSec
-lcall waitHalfSec
-lcall waitHalfSec
-lcall waitHalfSec
+	load_y(235)
+	mov x+0, soak_temperature
+	mov x+1, soak_temperature+1
+	lcall x_lt_y
+	jb mf, test_proper_values_checkReflow
+	lcall display_soak_temperature_high
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+	setb UI_Input_Error
 
+test_proper_values_checkReflow:
 ;if it is too high, display error, then jump to setting up parameters again
-lcall display_reflow_temperature_high
-lcall WaitHalfSec
-lcall waitHalfSec
-lcall waitHalfSec
-lcall waitHalfSec
+	load_y(235)
+	mov x+0, reflow_temperature
+	mov x+1, reflow_temperature+1
+	lcall x_lt_y
+	jb mf, test_proper_values_checkReflowTime
+	lcall display_reflow_temperature_high
+	lcall WaitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+	setb UI_Input_Error
 
 ;Compares to see if the reflow time is less or equal to 45
 ;if it is too high, display error, then jump to setting up parameters again
-lcall display_reflow_time_high
-lcall waitHalfSec
-lcall waitHalfSec
-lcall waitHalfSec
+test_proper_values_checkReflowTime:
+	load_y(45)
+	mov x+0, reflow_time
+	mov x+1, reflow_time+1
+	lcall x_lt_y
+	jb mf, test_proper_values_done
+	lcall display_reflow_time_high
+	lcall waitHalfSec
+	lcall waitHalfSec
+	lcall waitHalfSec
+	setb UI_Input_Error
 
 ;if everything is fine, continue with the process
-ret
-end
+test_proper_values_done:
+	ret
+
+$LIST

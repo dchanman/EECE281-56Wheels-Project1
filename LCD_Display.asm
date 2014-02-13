@@ -1651,7 +1651,7 @@ Display_Options:
 	lcall LCD_put
 	ret
 	
-display_soak_temperature_high
+display_soak_temperature_high:
 	mov a, #80h
 	lcall LCD_command
 	mov a, #'E'
@@ -1723,7 +1723,7 @@ display_soak_temperature_high
 	lcall LCD_put
 ret
 
-display_reflow_temperature_high
+display_reflow_temperature_high:
 	mov a, #80h
 	lcall LCD_command
 	mov a, #'E'
@@ -1795,7 +1795,7 @@ display_reflow_temperature_high
 	lcall LCD_put
 ret
 
-display_reflow_time_high
+display_reflow_time_high:
 	mov a, #80h
 	lcall LCD_command
 	mov a, #'E'
