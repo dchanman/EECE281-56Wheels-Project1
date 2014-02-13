@@ -268,4 +268,13 @@ turnoff_7seg:
 	mov HEX3, #11111111B
 	mov HEX4, #11111111B
 ret
+
+test_proper_values:
+;Compares all temperatures and sees if the soak temp and reflow temp is less than 235
+lcall display_soak_temperature_high
+lcall display_reflow_temperature_high
+
+;Compares to see if the reflow time is less or equal to 45
+lcall display_reflow_time_high
+ret
 end
