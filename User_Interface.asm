@@ -170,9 +170,6 @@ Wait_for_Confirmation:
 ;Function: Waits for the user to enter a value, and leaves the loop if KEY1 is pressed	
 Wait_for_Values:
 ;Wait_for_Values_loop: 
-	mov bcd+0, #0
-	mov bcd+1, #0
-Wait_for_Values_loop:	
 	lcall Display
 	lcall ReadNumber
 	jnb KEY.1, wait_key1
@@ -180,7 +177,7 @@ Wait_for_Values_loop:
 	lcall Shift_Digits
 	lcall Display
 
-	ljmp Wait_for_Values_loop
+	ljmp Wait_for_Values
 
 
 ;waits for KEY1 to be unpressed
@@ -208,11 +205,11 @@ option1:
 	;move values into the correct registers
 	mov soak_temperature+0, #00110000B
 	mov soak_temperature+1, #00000001B
-	mov soak_time+0, #00000101B
+	mov soak_time+0, #01100000B
 	mov soak_time+1, #00000000B
 	mov reflow_temperature+0, #00010000B
 	mov reflow_temperature+1, #00000010B
-	mov reflow_time+0, #00000101B
+	mov reflow_time+0, #00110000B
 	mov reflow_time+1, #00000000B
 	ljmp confirmation_message
 option2:
