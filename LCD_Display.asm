@@ -1867,6 +1867,76 @@ display_reflow_time_high:
 	lcall LCD_put
 ret
 
+display_finished:
+	mov a, #80h
+	lcall LCD_command
+	mov a, #'S'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'l'
+	lcall LCD_put
+	mov a, #'d'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'r'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'g'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'D'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'n'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	
+	mov a, #0c0H
+	lcall LCD_command
+	mov a, #'R'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #'m'
+	lcall LCD_put
+	mov a, #'o'
+	lcall LCD_put
+	mov a, #'v'
+	lcall LCD_put
+	mov a, #'e'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #'C'
+	lcall LCD_put
+	mov a, #'h'
+	lcall LCD_put
+	mov a, #'i'
+	lcall LCD_put
+	mov a, #'p'
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
+	mov a, #' '
+	lcall LCD_put
 ret
 
 end
