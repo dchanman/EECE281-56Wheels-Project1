@@ -1,29 +1,29 @@
 $NOLIST
-;----------------------------------------------------
-;	Thermocouple/Serial Input Interface
-; 
-;	Kyujin Park, Nina Dacanay, Glyn Han, Derek Chan
-;	
-;	Function:	1) 	Reads the voltage from the K-Type Thermocouple connected to 
-;				   	the MCP 3004 ADC Converter
-;				2) 	Converts the temperature and stores it as a binary value in
-;					the variable Temperature_Measured				   
-;
-;	Constants and Variables to be declared:
-;			MISO 	EQU P0.0
-;			MOSI	EQU P0.1
-;			SCLK	EQU P0.2
-;			CE_ADC	EQU P0.3			
-;			Temperature_Measured:	ds 2
-;			Temperature_Measured_Sign: db 1
-;
-;	Functions: 
-;			Thermocouple_Input_Read_ADC
-;
-;	Equation(voltage to temp) :  The equation above 0 °C is of the form 
-;								 E = sum(i=0 to n) c_i t^i + a0 exp(a1 (t - a2)^2)
-;	  
-;----------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Thermocouple Input
+;;
+;;Kyujin Park, Nina Dacanay, Glyn Han, Derek Chan
+;;
+;;Function: Loads the variable Temperature_Measured with the correct
+;;			temperature in the oven, calibrated with the cold junction
+;;			outside of the box.
+;;
+;;Constants:
+;;			MISO 	EQU P0.0
+;;			MOSI 	EQU P0.1
+;;			SCLK 	EQU P0.2
+;;			CE_ADC 	EQU P0.3
+;;
+;;Variables:
+;;			Temperatre_Measured:	        ds 2
+;;			Outside_Temperature_Measured:	ds 2
+;;
+;;Functions:
+;;			Thermocouple_Update
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;		
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;Thermocouple_Input_Init								

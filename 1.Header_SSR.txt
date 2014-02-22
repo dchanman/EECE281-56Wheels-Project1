@@ -1,11 +1,25 @@
-;----------------------------------------------------
-;	SSR 
-; 
-;	Derek Chan
-;	
-;	Function: Controls the SSR Relay box
-;	Constants and Variables to be declared: n/a
-;	Functions:	
-;				SSR_Enable 	- 	turns on the SSR
-;				SSR_Disable	-	turns off the SSR
-;----------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;	SSR 
+;; 
+;;	Derek Chan
+;;	
+;;	Function: Controls the SSR Relay box
+;;	Constants and Variables to be declared: n/a
+;;	Subroutines:
+;;				SSR_Enable 	- 	turns on the SSR
+;;				SSR_Disable	-	turns off the SSR
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;SSR_Enable
+;;
+;;Enables the SSR, thus turning on the oven
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;SSR_Disable
+;;
+;;Disables the SSR, thus turning off the oven
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

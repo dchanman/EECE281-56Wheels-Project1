@@ -1,35 +1,37 @@
 $NOLIST
-;----------------------------------------------------
-;	Serial Port Interface
-; 
-;	Nina Dacanay 
-;
-;	Function:  1.)Takes and Reads the temperature from 
-;				 the K-Type thermocouple connected to 
-;				 the MCP3004 ADC Converter.
-;				  
-;			   2.)Displays the temperature to a Python
-;				 Strip Chart through the Serial Port.
-;	
-;	Inputs:    1.)Temperature
-;	Outputs:   2.)Temperature Strip Chart
-;
-;   Timers used:
-;			   1.)Timer 2 (To configure the srial port and baud rate)
-;
-;	Look-up tables used:
-;			   1.)Serial_Port_My_Lut_ASCII
-;	
-;	Constants to be initialized:
-;			   1.)T2LOAD EQU 65536-(FREQ/(32*BAUD))
-;			   2.)FREQ   EQU 33333333
-;			   3.)BAUD   EQU 115200
-;	Variables and Registers: 
-;				1.)Accumulator
-;			    2.)Temperature_Measured
-;			  	3.)SBUF
-;				     
-;----------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;	Serial Port Interface
+;; 
+;;	Nina Dacanay 
+;;
+;;	Function:  1.)Takes and Reads the temperature from 
+;;				 the K-Type thermocouple connected to 
+;;				 the MCP3004 ADC Converter.
+;;				  
+;;			   2.)Displays the temperature to a Python
+;;				 Strip Chart through the Serial Port.
+;;	
+;;	Inputs:    1.)Temperature
+;;	Outputs:   2.)Temperature Strip Chart
+;;
+;;   Timers used:
+;;			   1.)Timer 2 (To configure the srial port and baud rate)
+;;
+;;	Look-up tables used:
+;;			   1.)Serial_Port_My_Lut_ASCII
+;;	
+;;	Constants to be initialized:
+;;			   1.)T2LOAD EQU 65536-(FREQ/(32*BAUD))
+;;			   2.)FREQ   EQU 33333333
+;;			   3.)BAUD   EQU 115200
+;;	Variables and Registers: 
+;;				1.)Accumulator
+;;			    2.)Temperature_Measured
+;;			  	3.)SBUF
+;;				     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 CSEG
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

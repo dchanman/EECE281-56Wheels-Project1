@@ -3,18 +3,7 @@
 ; 
 ;	Sasha Dordzijev, Jessica Hua
 ;	
-;	Function:	1) 	Displays a message on the LCD
-;			2)	Displays variable information on the LCD (States, temperatures)			   
-;
-;	Constants and Variables to be declared:
-;			//TODO: fill me in pls
-;
-;	Functions: 
-;			LCD_init		-	Initializes the LCD
-;			LCD_Clear 		-	Clears the LCD
-;			LCD_WriteMessage	-	Writes a message pointed by the DPTR to the top line
-;			LCD_WriteTemperature	-	Writes the current temperature + target temperature to bottom line
-;			LCD_WriteVariables	-	Writes the Soak Time/Temp and Reflow Time/Temp to bottom line
+;	Function:	1) 	Write messages to the LCD according to state	
 ;	  
 ;----------------------------------------------------
 
