@@ -25,9 +25,9 @@
 ;		Buzzer_Beep_Count	:	ds 1
 ;		Buzzer_Beep_Num		:	ds 1
 ;
-;		Buzzer_Beep_Active		:	dbit 1		
+;		Buzzer_Beep_Active	:	dbit 1		
 ;		Buzzer_Continuous_Tone	:	dbit 1
-;----------------------------------------------------
+;-------------------------------------------------------------------------------------------
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Buzzer_Beep_Multiple(int numBeeps)
